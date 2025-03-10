@@ -9,6 +9,7 @@ import TaskColumn from "@/components/task-column"
 import TaskModal from "@/components/task-modal"
 import type { Task, Column, User, Team } from "@/lib/types"
 import { teamsAPI } from "@/lib/api-instant"
+import { tasksAPI } from "@/api-instant"
 import { usersAPI } from "@/lib/api-instant"
 
 export default function TaskBoard() {
@@ -22,9 +23,28 @@ export default function TaskBoard() {
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
 
-  const getTeams = async () => {
-    // Thêm logic để lấy dữ liệu teams
-  };
+  useEffect(() => { 
+    getTeams(); 
+    getUsers();
+    getTasks();
+  }, [])
+
+  const getTasks = async () => {
+    const res = await tasksAPI.getAll();
+    console.log(res);
+    setTasks(res);
+  }
+
+  const getTeams = async () => {  
+    const res = await teamsAPI.getAll(); 
+    console.log(res);
+    setTeams(res);
+  }
+
+  const getUsers = async () => {  
+    const res = await teamsAPI.getAll();
+    setUsers(res);
+  }
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);

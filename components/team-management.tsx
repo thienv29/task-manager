@@ -11,17 +11,14 @@ import { get } from "http"
 
 export default function TeamManagement() {
   
-  const [teams, setTeams] = useState<Team[]>([
+  const [teams, setTeams] = useState<Team[]>([])
 
-
-  ])
-
-  const [users, setUsers] = useState<User[]>([
-  ])
+  const [users, setUsers] = useState<User[]>([])
 useEffect(() => { 
   getTeams(); 
   getUsers();
 }, [])
+
 const getTeams = async () => {  
   const res = await teamsAPI.getAll(); 
   setTeams(res);
