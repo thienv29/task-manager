@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import UserList from "@/components/user-list"
 import UserModal from "@/components/user-modal"
-import { useStore } from "@/lib/store"
+import { useUserStore } from "@/lib/stores/storeUsers"
+import { useTeamStore } from "@/lib/stores/storeTeams"
 import type { User } from "@/lib/types"
 
 // Định nghĩa component UserManagement
@@ -14,7 +15,6 @@ export default function UserManagement() {
   // Sử dụng hook useStore từ Zustand để truy cập và cập nhật trạng thái
   const {
     users, // Danh sách người dùng
-    teams, // Danh sách đội
     isModalOpen, // Trạng thái mở/đóng của modal
     editingUser, // Người dùng đang được chỉnh sửa
     setIsModalOpen, // Hàm để cập nhật trạng thái mở/đóng của modal
@@ -23,8 +23,8 @@ export default function UserManagement() {
     editUser, // Hàm để chỉnh sửa người dùng
     deleteUser, // Hàm để xóa người dùng
     fetchUsers, // Hàm để lấy danh sách người dùng từ API
-    fetchTeams, // Hàm để lấy danh sách đội từ API
-  } = useStore();
+  } = useUserStore();
+  const { teams, fetchTeams } = useTeamStore(); // Lấy danh sách đội và hàm fetchTeams từ store
 
   // Sử dụng useEffect để gọi hàm fetchUsers và fetchTeams khi component được mount
   useEffect(() => {
