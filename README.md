@@ -1,4 +1,4 @@
-# My V0 Project
+# task-manager 
 
 This is a task management application built with Next.js, React, and various UI components from Radix UI.
 
@@ -15,7 +15,7 @@ Make sure you have the following installed on your machine:
 1. Clone the repository:
     ```sh
     git clone (https://github.com/thienv29/task-manager.git)
-    cd my-v0-project
+    cd task-manager
     ```
 
 2. Install dependencies:
