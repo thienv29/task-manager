@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { User, Team, Task } from '@/lib/types';
-import { usersAPI, teamsAPI, tasksAPI } from '@/api-instant';
+import { usersAPI, teamsAPI, tasksAPI } from '@/lib/api-instant';
 
 interface State {
   users: User[];
