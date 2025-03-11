@@ -1,5 +1,6 @@
 "use client"
 
+// Import các hook và component cần thiết
 import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
@@ -8,29 +9,33 @@ import UserModal from "@/components/user-modal"
 import { useStore } from "@/lib/store"
 import type { User } from "@/lib/types"
 
+// Định nghĩa component UserManagement
 export default function UserManagement() {
+  // Sử dụng hook useStore từ Zustand để truy cập và cập nhật trạng thái
   const {
-    users,
-    teams,
-    isModalOpen,
-    editingUser,
-    setIsModalOpen,
-    setEditingUser,
-    addUser,
-    editUser,
-    deleteUser,
-    fetchUsers,
-    fetchTeams,
+    users, // Danh sách người dùng
+    teams, // Danh sách đội
+    isModalOpen, // Trạng thái mở/đóng của modal
+    editingUser, // Người dùng đang được chỉnh sửa
+    setIsModalOpen, // Hàm để cập nhật trạng thái mở/đóng của modal
+    setEditingUser, // Hàm để cập nhật người dùng đang được chỉnh sửa
+    addUser, // Hàm để thêm người dùng mới
+    editUser, // Hàm để chỉnh sửa người dùng
+    deleteUser, // Hàm để xóa người dùng
+    fetchUsers, // Hàm để lấy danh sách người dùng từ API
+    fetchTeams, // Hàm để lấy danh sách đội từ API
   } = useStore();
 
+  // Sử dụng useEffect để gọi hàm fetchUsers và fetchTeams khi component được mount
   useEffect(() => {
     fetchUsers();
     fetchTeams();
   }, [fetchUsers, fetchTeams]);
 
+  // Hàm để mở modal chỉnh sửa người dùng
   const openEditModal = (user: User) => {
-    setEditingUser(user);
-    setIsModalOpen(true);
+    setEditingUser(user); // Cập nhật người dùng đang được chỉnh sửa
+    setIsModalOpen(true); // Mở modal
   };
 
   return (
@@ -42,18 +47,20 @@ export default function UserManagement() {
         </Button>
       </div>
 
+      {/* Hiển thị danh sách người dùng */}
       <UserList users={users} teams={teams} onEditUser={openEditModal} />
 
+      {/* Modal để thêm hoặc chỉnh sửa người dùng */}
       <UserModal
         isOpen={isModalOpen}
         onClose={() => {
-          setIsModalOpen(false);
-          setEditingUser(null);
+          setIsModalOpen(false); // Đóng modal
+          setEditingUser(null); // Xóa người dùng đang được chỉnh sửa
         }}
-        onSave={editingUser ? editUser : addUser}
-        onDelete={editingUser ? deleteUser : undefined}
-        teams={teams}
-        user={editingUser}
+        onSave={editingUser ? editUser : addUser} // Lưu người dùng mới hoặc chỉnh sửa người dùng
+        onDelete={editingUser ? deleteUser : undefined} // Xóa người dùng nếu đang chỉnh sửa
+        teams={teams} // Truyền danh sách đội vào modal
+        user={editingUser} // Truyền người dùng đang được chỉnh sửa vào modal
       />
     </div>
   );
