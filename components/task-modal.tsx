@@ -88,10 +88,10 @@ export default function TaskModal({ isOpen, onClose, onSave, onDelete, columns, 
 
   const filterUsersByTeam = (teamId: string) => {
     if (teamId) {
-      const teamUsers = users.filter((user) => user.teamIds.includes(teamId))
-      setFilteredUsers(teamUsers)
+      const teamUsers = users.filter((user) => user.teamIds?.includes(teamId) || false);
+      setFilteredUsers(teamUsers);
     } else {
-      setFilteredUsers(users)
+      setFilteredUsers(users);
     }
   }
 

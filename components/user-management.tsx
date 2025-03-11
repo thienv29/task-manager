@@ -1,63 +1,37 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import UserList from "@/components/user-list"
 import UserModal from "@/components/user-modal"
-import type { User, Team } from "@/lib/types"
-import { usersAPI } from "@/lib/api-instant"
-import { teamsAPI } from "@/lib/api-instant"
-import { tasksAPI } from "@/lib/api-instant"
-
+import { useStore } from "@/lib/store"
+import type { User } from "@/lib/types"
 
 export default function UserManagement() {
-  const [users, setUsers] = useState<User[]>([])
-  const [teams, setTeams] = useState<Team[]>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<User | null>(null)
-
+  const {
+    users,
+    teams,
+    isModalOpen,
+    editingUser,
+    setIsModalOpen,
+    setEditingUser,
+    addUser,
+    editUser,
+    deleteUser,
+    fetchUsers,
+    fetchTeams,
+  } = useStore();
 
   useEffect(() => {
-    getUsers();
-    getTeams();
-  }, [])
-  const getTeams = async () => {
-    const res = await teamsAPI.getAll();
-    setTeams(res);
-  }
-  const getUsers = async () => {
-    const res = await usersAPI.getAll();
-    setUsers(res);
-  }
-
-  const handleAddUser = (user: Omit<User, "id">) => {
-    const newUser = {
-      ...user,
-      id: Math.random().toString(36).substring(2, 9),
-    }
-
-    setUsers([...users, newUser as User])
-    setIsModalOpen(false)
-    setEditingUser(null)
-  }
-
-  const handleEditUser = (user: User) => {
-    setUsers(users.map((u) => (u.id === user.id ? user : u)))
-    setIsModalOpen(false)
-    setEditingUser(null)
-  }
-
-  const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter((user) => user.id !== userId))
-    setIsModalOpen(false)
-    setEditingUser(null)
-  }
+    fetchUsers();
+    fetchTeams();
+  }, [fetchUsers, fetchTeams]);
 
   const openEditModal = (user: User) => {
-    setEditingUser(user)
-    setIsModalOpen(true)
-  }
+    setEditingUser(user);
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="space-y-4">
@@ -73,15 +47,15 @@ export default function UserManagement() {
       <UserModal
         isOpen={isModalOpen}
         onClose={() => {
-          setIsModalOpen(false)
-          setEditingUser(null)
+          setIsModalOpen(false);
+          setEditingUser(null);
         }}
-        onSave={editingUser ? handleEditUser : handleAddUser}
-        onDelete={editingUser ? handleDeleteUser : undefined}
+        onSave={editingUser ? editUser : addUser}
+        onDelete={editingUser ? deleteUser : undefined}
         teams={teams}
         user={editingUser}
       />
     </div>
-  )
+  );
 }
 
