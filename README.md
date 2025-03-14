@@ -23,6 +23,14 @@ Make sure you have the following installed on your machine:
     npm install --legacy-peer-deps
     ```
 
+### Installing Zustand
+
+To install Zustand for state management, run:
+
+```sh
+npm install zustand --legacy-peer-deps
+```
+
 ### Running the Development Server
 
 To start the development server, run:
