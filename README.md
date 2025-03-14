@@ -14,7 +14,7 @@ Make sure you have the following installed on your machine:
 
 1. Clone the repository:
     ```sh
-    git clone (https://github.com/thienv29/task-manager.git)
+    git clone https://github.com/thienv29/task-manager.git
     cd task-manager
     ```
 
@@ -22,6 +22,14 @@ Make sure you have the following installed on your machine:
     ```sh
     npm install --legacy-peer-deps
     ```
+
+### Installing Zustand
+
+To install Zustand for state management, run:
+
+```sh
+npm install zustand --legacy-peer-deps
+```
 
 ### Running the Development Server
 

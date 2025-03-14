@@ -7,26 +7,25 @@ import TeamList from "@/components/team-list"
 import TeamModal from "@/components/team-modal"
 import type { User, Team } from "@/lib/types"
 import { teamsAPI } from "@/lib/api-instant"
-import { get } from "http"
 
 export default function TeamManagement() {
-  
+
   const [teams, setTeams] = useState<Team[]>([])
 
   const [users, setUsers] = useState<User[]>([])
-useEffect(() => { 
-  getTeams(); 
-  getUsers();
-}, [])
+  useEffect(() => {
+    getTeams();
+    getUsers();
+  }, [])
 
-const getTeams = async () => {  
-  const res = await teamsAPI.getAll(); 
-  setTeams(res);
-}
-const getUsers = async () => {  
-  const res = await teamsAPI.getAll();
-  setUsers(res);
-}
+  const getTeams = async () => {
+    const res = await teamsAPI.getAll();
+    setTeams(res);
+  }
+  const getUsers = async () => {
+    const res = await teamsAPI.getAll();
+    setUsers(res);
+  }
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingTeam, setEditingTeam] = useState<Team | null>(null)
 

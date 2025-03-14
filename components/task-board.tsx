@@ -9,8 +9,7 @@ import TaskColumn from "@/components/task-column"
 import TaskModal from "@/components/task-modal"
 import type { Task, Column, User, Team } from "@/lib/types"
 import { teamsAPI } from "@/lib/api-instant"
-import { tasksAPI } from "@/api-instant"
-import { usersAPI } from "@/lib/api-instant"
+import { tasksAPI } from "@/lib/api-instant"
 
 export default function TaskBoard() {
   const [columns, setColumns] = useState<Column[]>([
@@ -23,6 +22,10 @@ export default function TaskBoard() {
   const [users, setUsers] = useState<User[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  
   useEffect(() => { 
     getTeams(); 
     getUsers();
@@ -46,9 +49,6 @@ export default function TaskBoard() {
     setUsers(res);
   }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {
     e.dataTransfer.setData("taskId", taskId);
