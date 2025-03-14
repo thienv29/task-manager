@@ -1,32 +1,49 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json(); // Lấy dữ liệu từ body
-    return NextResponse.json({ message: "Data received", data: body }, { status: 200 });
+    const body = await req.json();
+    const newTask = await prisma.task.create({ data: body });
+
+    return NextResponse.json({ message: "Task created", data: newTask }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ error: "Failed to create task" }, { status: 400 });
   }
 }
 
 export async function GET() {
-  return NextResponse.json({ message: "This is a GET request", data: { id: 1, name: "Thiện" } }, { status: 200 });
+  try {
+    const tasks = await prisma.task.findMany();
+    return NextResponse.json({ message: "Tasks retrieved", data: tasks }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to retrieve tasks" }, { status: 500 });
+  }
 }
 
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    return NextResponse.json({ message: "PUT request successful", updatedData: body }, { status: 200 });
+    const updatedTask = await prisma.task.update({
+      where: { id: body.id },
+      data: body
+    });
+
+    return NextResponse.json({ message: "Task updated", data: updatedTask }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ error: "Failed to update task" }, { status: 400 });
   }
 }
 
-export async function PATCH(req: Request) {
+export async function DELETE(req: Request) {
   try {
-    const body = await req.json();
-    return NextResponse.json({ message: "PATCH request successful", updatedFields: body }, { status: 200 });
+    const { id } = await req.json();
+    await prisma.task.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Task deleted" }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ error: "Failed to delete task" }, { status: 400 });
   }
 }
