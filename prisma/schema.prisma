@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  columnId    String?
+  assigneeId  Int?
+  teamId      Int?
+  priority    String?
+}
+
+model Column {
+  id      Int    @id @default(autoincrement())
+  title   String
+  color   String
+}
+
+model User {
+  id      Int    @id @default(autoincrement())
+  name    String
+  email   String  @unique
+  role    String?
+  teamIds Json?
+}
+
+model Team {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
+  memberIds   Json?
+  color       String?
+}
