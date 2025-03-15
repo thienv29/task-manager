@@ -1,11 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import type { User, Team } from "@/lib/types"
+import {  User } from "@prisma/client"
+import { TeamFull } from "@/lib/types"
 
 interface TeamListProps {
-  teams: Team[]
+  teams: TeamFull[]
   users: User[]
-  onEditTeam: (team: Team) => void
+  onEditTeam: (team: TeamFull) => void
 }
 
 export default function TeamList({ teams, users, onEditTeam }: TeamListProps) {
@@ -17,8 +18,8 @@ export default function TeamList({ teams, users, onEditTeam }: TeamListProps) {
       .toUpperCase()
   }
 
-  const getTeamMembers = (team: Team) => {
-    return users.filter((user) => team.memberIds.includes(user.id))
+  const getTeamMembers = (team: TeamFull) => {
+    return users.filter((user) => team.users.some((user) => user.id === user.id))
   }
 
   return (

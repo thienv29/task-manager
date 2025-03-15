@@ -15,13 +15,13 @@ export async function GET() {
 
 // Tạo user mới
 export async function POST(req: Request) {
-  try {
+  // try {
     const body = await req.json();
     const newUser = await prisma.user.create({ data: body });
     return NextResponse.json(newUser, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Error creating user" }, { status: 500 });
-  }
+  // } catch (error) {
+    // return NextResponse.json({ error: "Error creating user" }, { status: 500 });
+  // }
 }
 
 // Cập nhật user
