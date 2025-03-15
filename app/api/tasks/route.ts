@@ -3,33 +3,15 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Tạo task mới
 export async function POST(req: Request) {
-  try {
-    // Lấy dữ liệu từ body request
-    const { title, description, columnId, assigneeId, teamId, priority } = await req.json();
-
-    // Kiểm tra dữ liệu đầu vào (tránh lỗi thiếu dữ liệu)
-    if (!title || !description || !columnId || !assigneeId || !teamId || !priority) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    // Tạo Task mới trong database
-    const newTask = await prisma.task.create({
-      data: {
-        title,
-        description,
-        columnId,
-        assigneeId,
-        teamId,
-        priority,
-      },
-    });
-
-    return NextResponse.json(newTask, { status: 201 });
-  } catch (error) {
-    console.error("Error creating task:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+  // try {
+    const body = await req.json();
+    const newTeam = await prisma.task.create({ data: body });
+    return NextResponse.json(newTeam, { status: 201 });
+  // } catch (error) {
+  //   return NextResponse.json({ error: "Error creating team" }, { status: 500 });
+  // }
 }
 
 export async function GET() {

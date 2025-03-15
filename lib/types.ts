@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client"
+
 export interface Task {
   id: string
   title: string
@@ -30,4 +32,18 @@ export interface Team {
   memberIds: string[]
   color: string
 }
+
+export type TeamFull = Prisma.TeamGetPayload<{
+  include: {
+    tasks: true,
+    users: true,
+
+  }
+}>
+
+export type TaskFull = Prisma.TaskGetPayload<{
+  include: {
+    assignee: true,
+  }
+}>
 
