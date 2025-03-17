@@ -1,35 +1,52 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { TaskFull } from "@/lib/types";
 
 const prisma = new PrismaClient();
 
-// Tạo task mới
-export async function POST(req: Request) {
-  // try {
-    const body = await req.json();
-    const newTeam = await prisma.task.create({ data: body });
-    return NextResponse.json(newTeam, { status: 201 });
-  // } catch (error) {
-  //   return NextResponse.json({ error: "Error creating team" }, { status: 500 });
-  // }
-}
-
+// Get all tasks
 export async function GET() {
   try {
-    // Lấy tất cả tasks từ database
-    const tasks = await prisma.task.findMany();
-    
+    const tasks: TaskFull[] = await prisma.task.findMany({
+          include: { assignee: true },
+    });
     return NextResponse.json(tasks, { status: 200 });
   } catch (error) {
-    console.error("Error fetching tasks:", error);
+    return NextResponse.json({ error: "Failed to fetch tasks" }, { status: 500 });
+  }
+}
+
+// Create a new task
+export async function POST(req: Request) {
+  try {
+    const { title, description, priority, columnId, assignee, teamId } = await req.json();
+
+    const newTask = await prisma.task.create({
+      data: {
+        title,
+        description,
+        priority,
+        columnId,
+        assignee: {
+          connect: assignee.map((id: number) => ({ id }))
+        },
+        teamId,
+      },
+    });
+
+    return NextResponse.json(newTask, { status: 201 });
+  } catch (error) {
+    console.error("Error creating task:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
+
+
+// Update a task
 export async function PUT(req: Request) {
   try {
-    const body = await req.json();
-    const { id, ...updatedData } = body;
+    const { id, title, description, priority, columnId, assignee, teamId } = await req.json();
 
     if (!id) {
       return NextResponse.json({ error: "Task ID is required" }, { status: 400 });
@@ -37,17 +54,26 @@ export async function PUT(req: Request) {
 
     const updatedTask = await prisma.task.update({
       where: { id: Number(id) },
-      data: updatedData,
+      data: {
+        title,
+        description,
+        priority,
+        columnId,
+        assignee: {
+          set: assignee.map((id: number) => ({ id }))
+        },
+        teamId,
+      },
     });
 
     return NextResponse.json(updatedTask, { status: 200 });
   } catch (error) {
     console.error("Error updating task:", error);
-    return NextResponse.json({ error: "Error updating task" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-// Xóa task theo ID
+// Delete a task
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -64,6 +90,6 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error deleting task:", error);
-    return NextResponse.json({ error: "Error deleting task" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

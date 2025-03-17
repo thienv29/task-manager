@@ -1,49 +1,62 @@
-import { Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client";
 
 export interface Task {
-  id: string
-  title: string
-  description: string
-  columnId: string
-  assigneeId: string
-  teamId: string
-  priority: string
+  id: number;
+  title: string;
+  description?: string;
+  priority?: string;
+  columnId?: number;
+  teamId?: number;
+  assignee: number[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Column {
-  id: string
-  title: string
-  color: string
+  id: number;
+  title: string;
+  color: string;
+  tasks: number[];
 }
 
 export interface User {
-  id: string
-  name: string
-  email: string
-  avatar?: string
-  role: string
-  teamIds: string[]
+  id: number;
+  name: string;
+  email: string;
+  role?: string;
+  password?: string;
+  teamId?: number;
+  assignedTasks: number[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Team {
-  id: string
-  name: string
-  description: string
-  memberIds: string[]
-  color: string
+  id: number;
+  name: string;
+  description?: string;
+  color?: string;
+  users: number[];
+  tasks: number[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TeamFull = Prisma.TeamGetPayload<{
   include: {
-    tasks: true,
-    users: true,
-
-  }
-}>
+    tasks: true;
+    users: true;
+  };
+}>;
 
 export type TaskFull = Prisma.TaskGetPayload<{
   include: {
-    assignee: true,
-  }
-}>
+    assignee: true;
+  };
+}>;
 
+export type UserFull = Prisma.UserGetPayload<{
+  include: {
+    assignedTasks: true;
+  };
+}>;
