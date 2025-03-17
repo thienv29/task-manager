@@ -1,56 +1,98 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { UserFull } from "@/lib/types";
 
 const prisma = new PrismaClient();
 
-// Lấy danh sách tất cả users
-export async function GET() {
-  try {
-    const users = await prisma.user.findMany();
-    return NextResponse.json(users, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: "Error fetching users" }, { status: 500 });
-  }
-}
-
-// Tạo user mới
+// Create a new user
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const newUser = await prisma.user.create({ data: body });
+    const { name, email, password, role, assignedTasks, teamId } = await req.json();
+
+    if (!name || !email || !password) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+        role,
+        assignedTasks: {
+          connect: assignedTasks?.map((taskId: number) => ({ id: taskId })) || [],
+        },
+        teamId,
+      },
+    });
+
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Error creating user" }, { status: 500 });
+    console.error("Error creating user:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-// Cập nhật user
+// Get all users
+export async function GET() {
+  try {
+    const users: UserFull[] = await prisma.user.findMany({
+      include: {
+        assignedTasks: true,
+      },
+    });
+
+    return NextResponse.json(users, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+// Update a user
 export async function PUT(req: Request) {
   try {
-    const body = await req.json();
-    const { id, ...updatedData } = body;
+    const { id, name, email, password, role, teamId } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id: Number(id) },
-      data: updatedData,
+      data: {
+        name,
+        email,
+        password,
+        role,
+        teamId,
+      },
     });
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Error updating user" }, { status: 500 });
+    console.error("Error updating user:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-// Xóa user
+// Delete a user
 export async function DELETE(req: Request) {
   try {
-    const body = await req.json();
-    const { id } = body;
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
-    await prisma.user.delete({ where: { id: Number(id) } });
+    if (!id) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    await prisma.user.delete({
+      where: { id: Number(id) },
+    });
 
     return NextResponse.json({ message: "User deleted successfully" }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Error deleting user" }, { status: 500 });
+    console.error("Error deleting user:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
