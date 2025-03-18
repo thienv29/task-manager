@@ -1,5 +1,4 @@
-
-import { signIn } from "@/auth"
+import {signIn} from "@/auth"
 import {Button} from "@/components/ui/button";
 
 export default function SignIn() {

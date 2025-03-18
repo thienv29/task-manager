@@ -9,8 +9,8 @@ import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
 import {Checkbox} from "@/components/ui/checkbox"
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
-import {Team, User} from "@prisma/client";
-import {TeamForm, TeamFull} from "@/lib/types";
+import {User} from "@prisma/client";
+import {TeamForm} from "@/lib/types";
 
 interface TeamModalProps {
     isOpen: boolean
@@ -116,7 +116,7 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
                         </div>
                         <div className="grid gap-2">
                             <Label>Team Color</Label>
-                            <RadioGroup value={formData.color ?? 'bg-blue-500'}  onValueChange={handleColorChange}
+                            <RadioGroup value={formData.color ?? 'bg-blue-500'} onValueChange={handleColorChange}
                                         className="flex flex-wrap gap-2">
                                 {colorOptions.map((option) => (
                                     <div key={option.value} className="flex items-center space-x-2">

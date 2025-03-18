@@ -1,4 +1,4 @@
-# task-manager 
+# task-manager
 
 This is a task management application built with Next.js, React, and various UI components from Radix UI.
 
@@ -7,6 +7,7 @@ This is a task management application built with Next.js, React, and various UI 
 ### Prerequisites
 
 Make sure you have the following installed on your machine:
+
 - [Node.js](https://nodejs.org/) (Recommended: Latest LTS version)
 - npm (Comes with Node.js)
 
@@ -24,24 +25,29 @@ Make sure you have the following installed on your machine:
     ```
 
 ### Prisma Workflow Guide
+
 1. Install Dependencies
+
 ```sh
 npm install @prisma/client prisma mysql2
 ```
 
 2. Initialize Prisma
+
 ```sh
 npx prisma init
 ```
 
 3. Configure Database Connection
-Edit `.env`:
+   Edit `.env`:
+
 ```env
 DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
 ```
 
 4. Define Models in `schema.prisma`
-Example:
+   Example:
+
 ```prisma
 model User {
   id    Int    @id @default(autoincrement())
@@ -52,21 +58,26 @@ model User {
 ```
 
 5. Run Migrations
+
 ```sh
 npx prisma migrate dev --name init
 ```
+
 For production:
+
 ```sh
 npx prisma migrate deploy
 ```
 
 6. Generate Prisma Client
+
 ```sh
 npx prisma generate
 ```
 
 7. Use Prisma in Code
-Create a Prisma client instance in `lib/prisma.js`:
+   Create a Prisma client instance in `lib/prisma.js`:
+
 ```js
 import { PrismaClient } from "@prisma/client";
 
@@ -75,7 +86,8 @@ export default prisma;
 ```
 
 8. Create API to Fetch Data in Next.js
-Create an API route in `pages/api/tasks.ts`:
+   Create an API route in `pages/api/tasks.ts`:
+
 ```js
 import prisma from "../../lib/prisma";
 
@@ -93,10 +105,10 @@ export async function GET() {
 ```
 
 9. Deploy Prisma Migrations
+
 ```sh
 npx prisma migrate deploy
 ```
-
 
 ### Installing Zustand
 

@@ -68,8 +68,8 @@ export default function LoginPage(props: {
                             </div>
 
                             <div className="mt-6">
-                                <Button variant="outline" className="w-full" onClick={() => signIn("google",{
-                                    redirectTo:'/dashboard'
+                                <Button variant="outline" className="w-full" onClick={() => signIn("google", {
+                                    redirectTo: '/dashboard'
                                 })}>
                                     <svg className="mr-2 h-4 w-4" aria-hidden="true" viewBox="0 0 24 24">
                                         <path

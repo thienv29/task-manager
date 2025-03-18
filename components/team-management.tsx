@@ -1,8 +1,8 @@
 "use client"
 
-import {useEffect, useState} from "react"
-import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
+import {useEffect} from "react"
+import {Button} from "@/components/ui/button"
+import {PlusCircle} from "lucide-react"
 import TeamList from "@/components/team-list"
 import TeamModal from "@/components/team-modal"
 import {useTeamStore} from "@/lib/stores/storeTeams";
@@ -16,7 +16,7 @@ export default function TeamManagement() {
     } = useTeamStore()
 
     const {
-         users, fetchUsers
+        users, fetchUsers
     } = useUserStore()
 
     useEffect(() => {
@@ -29,11 +29,11 @@ export default function TeamManagement() {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Teams</h2>
                 <Button onClick={() => setModalOpen(true)}>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Team
+                    <PlusCircle className="mr-2 h-4 w-4"/> Add Team
                 </Button>
             </div>
 
-            <TeamList teams={teams} users={users} onEditTeam={setEditingTeam} />
+            <TeamList teams={teams} users={users} onEditTeam={setEditingTeam}/>
 
             <TeamModal
                 isOpen={isModalAddOrUpdateOpen}

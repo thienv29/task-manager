@@ -2,6 +2,7 @@ import {PrismaClient} from '@prisma/client';
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
 async function main() {
     // Create Teams
     const team1 = await prisma.team.create({

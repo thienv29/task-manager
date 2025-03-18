@@ -7,21 +7,25 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import React from "react";
 import {
     DropdownMenu,
-    DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator, DropdownMenuShortcut,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "next-auth/react"
+import {signOut} from "next-auth/react"
 
 export default async function Header() {
     const session = await auth()
 
     return (
-        <header className="sticky flex items-center justify-center top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header
+            className="sticky flex items-center justify-center top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
+                    <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32}/>
                     <span className="text-xl font-bold">Company</span>
                 </div>
 
@@ -38,7 +42,8 @@ export default async function Header() {
                             </Link>
                         </li>
                         <li>
-                            <Link href="#testimonials" className="text-sm font-medium transition-colors hover:text-primary">
+                            <Link href="#testimonials"
+                                  className="text-sm font-medium transition-colors hover:text-primary">
                                 Testimonials
                             </Link>
                         </li>
@@ -95,10 +100,10 @@ export default async function Header() {
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator/>
 
-                                    <DropdownMenuItem className='cursor-pointer text-red-500' onClick={signOut}>
-                                        Log out
-                                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                                    </DropdownMenuItem>
+                                <DropdownMenuItem className='cursor-pointer text-red-500' onClick={signOut}>
+                                    Log out
+                                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     }
@@ -107,7 +112,7 @@ export default async function Header() {
                         <Link href="#">Get Started</Link>
                     </Button>
                     <Button variant="ghost" size="icon" className="md:hidden">
-                        <Menu className="h-5 w-5" />
+                        <Menu className="h-5 w-5"/>
                         <span className="sr-only">Toggle menu</span>
                     </Button>
                 </div>
