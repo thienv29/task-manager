@@ -2,17 +2,18 @@ import type React from "react"
 import {Card, CardContent, CardFooter} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
 import {Avatar, AvatarFallback} from "@/components/ui/avatar"
-import type {Task, Team, User} from "@/lib/types"
+import {TaskFull, TeamFull, UserFull} from "@/lib/types";
+import {User} from "@prisma/client";
 
 interface TaskCardProps {
-    task: Task
-    onDragStart: (e: React.DragEvent, taskId: string) => void
+    task: TaskFull
+    onDragStart: (e: React.DragEvent, taskId: number) => void
     onClick: () => void
-    team?: Team
-    assignee?: User
+    team?: TeamFull
+    assignees?: User[]
 }
 
-export default function TaskCard({task, onDragStart, onClick, team, assignee}: TaskCardProps) {
+export default function TaskCard({task, onDragStart, onClick, team, assignees}: TaskCardProps) {
     const priorityColors = {
         low: "bg-slate-100 text-slate-800",
         medium: "bg-blue-100 text-blue-800",
@@ -42,20 +43,23 @@ export default function TaskCard({task, onDragStart, onClick, team, assignee}: T
                         {task.priority}
                     </Badge>
                     {team && (
-                        <Badge variant="outline" className="border-2"
-                               style={{borderColor: team.color.replace("bg-", "")}}>
+                        <Badge
+                            variant="outline"
+                            className={`border-2 ${team.color ? team.color : ""}`}
+                        >
                             {team.name}
                         </Badge>
                     )}
                 </div>
             </CardContent>
             <CardFooter className="p-3 pt-0 flex justify-between items-center">
-                {assignee && (
-                    <div className="flex items-center">
-                        <Avatar className="h-6 w-6 mr-2">
-                            <AvatarFallback className="text-xs">{getInitials(assignee.name)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs text-muted-foreground">{assignee.name}</span>
+                {assignees && assignees.length > 0 && (
+                    <div className="flex -space-x-2">
+                        {assignees.map((assignee) => (
+                            <Avatar key={assignee.id} className="h-6 w-6 border-2 border-white">
+                                <AvatarFallback className="text-xs">{getInitials(assignee.name)}</AvatarFallback>
+                            </Avatar>
+                        ))}
                     </div>
                 )}
             </CardFooter>

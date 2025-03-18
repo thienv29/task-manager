@@ -51,3 +51,4 @@ function createAPI(resource: string) {
 export const teamsAPI = createAPI('teams');
 export const tasksAPI = createAPI('tasks');
 export const usersAPI = createAPI('users');
+export const columnsAPI = createAPI('columns');

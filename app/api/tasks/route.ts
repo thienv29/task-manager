@@ -4,19 +4,17 @@ import {TaskFull} from "@/lib/types";
 
 const prisma = new PrismaClient();
 
-// Get all tasks
 export async function GET() {
-    try {
+    // try {
         const tasks: TaskFull[] = await prisma.task.findMany({
-            include: {assignee: true},
+            include: {assignees: true},
         });
         return NextResponse.json(tasks, {status: 200});
-    } catch (error) {
-        return NextResponse.json({error: "Failed to fetch tasks"}, {status: 500});
-    }
+    // } catch (error) {
+    //     return NextResponse.json({error: "Failed to fetch tasks"}, {status: 500});
+    // }
 }
 
-// Create a new task
 export async function POST(req: Request) {
     try {
         const {title, description, priority, columnId, assignee, teamId} = await req.json();
@@ -27,7 +25,7 @@ export async function POST(req: Request) {
                 description,
                 priority,
                 columnId,
-                assignee: {
+                assignees: {
                     connect: assignee.map((id: number) => ({id}))
                 },
                 teamId,
@@ -42,7 +40,6 @@ export async function POST(req: Request) {
 }
 
 
-// Update a task
 export async function PUT(req: Request) {
     try {
         const {id, title, description, priority, columnId, assignee, teamId} = await req.json();
@@ -58,7 +55,7 @@ export async function PUT(req: Request) {
                 description,
                 priority,
                 columnId,
-                assignee: {
+                assignees: {
                     set: assignee.map((id: number) => ({id}))
                 },
                 teamId,
@@ -72,7 +69,6 @@ export async function PUT(req: Request) {
     }
 }
 
-// Delete a task
 export async function DELETE(req: Request) {
     try {
         const {searchParams} = new URL(req.url);

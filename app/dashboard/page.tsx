@@ -1,5 +1,5 @@
 import React from "react";
-import TaskBoard from "@/components/task-board";
+import TaskBoard from "@/components/management/task/task-board";
 
 export default function Home() {
     return (

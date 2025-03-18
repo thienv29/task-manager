@@ -1,5 +1,5 @@
 import type React from "react"
-import Navbar from "@/components/navbar"
+import Navbar from "@/components/partials/navbar"
 
 export default function RootLayout({
                                        children,

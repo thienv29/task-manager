@@ -4,7 +4,6 @@ import {TaskFull, TeamFull, UserFull} from "@/lib/types";
 
 const prisma = new PrismaClient();
 
-// Lấy danh sách tất cả teams
 export async function GET() {
     try {
         const teams: TeamFull[] = await prisma.team.findMany({
@@ -16,9 +15,8 @@ export async function GET() {
     }
 }
 
-// Tạo một team mới
 export async function POST(req: Request) {
-    // try {
+    try {
     const {name, description, color, users, tasks} = await req.json();
 
     const team = await prisma.team.create({
@@ -37,15 +35,15 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(team, {status: 201});
-    // } catch (error) {
-    //   return NextResponse.json({ error: "Failed to create team" }, { status: 500 });
-    // }
+    } catch (error) {
+      return NextResponse.json({ error: "Failed to create team" }, { status: 500 });
+    }
 }
 
-// Route động để xử lý team theo ID
 export async function DELETE(req: Request) {
     try {
         const {id} = await req.json();
+        console.log(id)
         await prisma.team.delete({where: {id}});
         return NextResponse.json({message: "Team deleted successfully"});
     } catch (error) {

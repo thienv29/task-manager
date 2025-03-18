@@ -23,15 +23,15 @@ async function main() {
 
     // Create Users
     const usersData = [
-        {name: 'Alice Johnson', email: 'alice@example.com', role: 'Developer', teamId: team1.id},
-        {name: 'Bob Smith', email: 'bob@example.com', role: 'Marketer', teamId: team2.id},
+        {name: 'Alice Johnson', email: 'alice@example.com', role: 'team_lead', teamId: team1.id},
+        {name: 'Bob Smith', email: 'bob@example.com', role: 'member', teamId: team2.id},
         {name: 'Charlie Brown', email: 'charlie@example.com', role: 'admin', teamId: team1.id},
         {name: 'David Miller', email: 'david@example.com', role: 'team_lead', teamId: team2.id},
         {name: 'Emma Wilson', email: 'emma@example.com', role: 'member', teamId: team1.id},
-        {name: 'Frank Adams', email: 'frank@example.com', role: 'admin', teamId: team2.id},
+        {name: 'Frank Adams', email: 'frank@example.com', role: 'member', teamId: team2.id},
         {name: 'Grace Thomas', email: 'grace@example.com', role: 'team_lead', teamId: team1.id},
         {name: 'Henry Scott', email: 'henry@example.com', role: 'member', teamId: team2.id},
-        {name: 'Ivy Johnson', email: 'ivy@example.com', role: 'admin', teamId: team1.id},
+        {name: 'Ivy Johnson', email: 'ivy@example.com', role: 'member', teamId: team1.id},
         {name: 'Jack White', email: 'jack@example.com', role: 'team_lead', teamId: team2.id},
         {name: 'Karen Black', email: 'karen@example.com', role: 'member', teamId: team1.id},
     ];
@@ -74,7 +74,7 @@ async function main() {
             priority: 'High',
             columnId: todoColumn.id,
             teamId: team1.id,
-            assignee: {connect: [{id: 1}]},
+            assignees: {connect: [{id: 1}]},
         },
     });
 
@@ -85,7 +85,7 @@ async function main() {
             priority: 'Medium',
             columnId: inProgressColumn.id,
             teamId: team2.id,
-            assignee: {connect: [{id: 2}]},
+            assignees: {connect: [{id: 2}]},
         },
     });
 

@@ -11,6 +11,8 @@ import {Checkbox} from "@/components/ui/checkbox"
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
 import {User} from "@prisma/client";
 import {TeamForm} from "@/lib/types";
+import {ConfirmDialog} from "@/components/confirm-dialog";
+import {Archive} from "lucide-react";
 
 interface TeamModalProps {
     isOpen: boolean
@@ -61,7 +63,6 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
     }
 
     const handleMemberToggle = (userId: number) => {
-        console.log(userId)
         setFormData((prev) => {
             const memberIds = prev.users.map(u => u.id).includes(userId)
                 ? prev.users.map(u => u.id).filter((id) => id !== userId)
@@ -77,8 +78,7 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
         setFormData((prev) => ({...prev, color}))
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = () => {
         if (team) {
             onSave({...formData, id: team.id})
         } else {
@@ -89,13 +89,14 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
     const handleDelete = () => {
         if (team && onDelete) {
             onDelete(team.id)
+            onClose();
         }
     }
 
     return (
+        <>
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[500px]">
-                <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>{team ? "Edit Team" : "Create New Team"}</DialogTitle>
                     </DialogHeader>
@@ -157,20 +158,32 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
                     </div>
                     <DialogFooter className="flex justify-between">
                         {team && onDelete && (
-                            <Button type="button" variant="destructive" onClick={handleDelete}>
-                                Delete
-                            </Button>
+                            <ConfirmDialog
+                                title="Delete Item"
+                                description="Are you sure you want to delete this item? This action cannot be undone."
+                                confirmLabel="Delete"
+                                variant="destructive"
+                                onConfirm={handleDelete}
+                                trigger={
+                                    <Button type="button" variant="destructive" >
+                                        Delete
+                                    </Button>
+                                }
+                            />
+
                         )}
                         <div className="flex gap-2">
                             <Button type="button" variant="outline" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button type="submit">{team ? "Save Changes" : "Create Team"}</Button>
+                            <Button onClick={handleSubmit} >{team ? "Save Changes" : "Create Team"}</Button>
                         </div>
                     </DialogFooter>
-                </form>
             </DialogContent>
         </Dialog>
+
+
+    </>
     )
 }
 

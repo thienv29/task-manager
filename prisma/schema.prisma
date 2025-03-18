@@ -16,7 +16,7 @@ model Task {
   columnId Int?
   column   Column? @relation(fields: [columnId], references: [id], onDelete: SetNull)
 
-  assignee User[]
+  assignees User[]
 
   teamId Int?
   team   Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)

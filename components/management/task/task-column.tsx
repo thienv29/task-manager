@@ -1,15 +1,13 @@
 import type React from "react"
-import TaskCard from "@/components/task-card"
-import type {Column, Task, Team, User} from "@/lib/types"
+import TaskCard from "@/components/management/task/task-card"
+import type {ColumnFull, TaskFull, TeamFull, UserFull} from "@/lib/types"
 
 interface TaskColumnProps {
-    column: Column
-    tasks: Task[]
-    onDragStart: (e: React.DragEvent, taskId: string) => void
-    onDrop: (e: React.DragEvent, columnId: string) => void
-    onEditTask: (task: Task) => void
-    getTeamById: (teamId: string) => Team | undefined
-    getUserById: (userId: string) => User | undefined
+    column: ColumnFull
+    tasks: TaskFull[]
+    onDragStart: (e: React.DragEvent, taskId: number) => void
+    onDrop: (e: React.DragEvent, columnId: number) => void
+    onEditTask: (task: TaskFull) => void
 }
 
 export default function TaskColumn({
@@ -18,8 +16,6 @@ export default function TaskColumn({
                                        onDragStart,
                                        onDrop,
                                        onEditTask,
-                                       getTeamById,
-                                       getUserById,
                                    }: TaskColumnProps) {
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault()
@@ -32,7 +28,8 @@ export default function TaskColumn({
 
     return (
         <div
-            className={`${column.color} rounded-lg p-4 h-full min-h-[500px]`}
+            className={` rounded-lg p-4 h-full min-h-[500px]`}
+            style={{backgroundColor: column.color}}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
@@ -46,8 +43,7 @@ export default function TaskColumn({
                         task={task}
                         onDragStart={onDragStart}
                         onClick={() => onEditTask(task)}
-                        team={getTeamById(task.teamId)}
-                        assignee={getUserById(task.assigneeId)}
+                        assignees={task.assignees}
                     />
                 ))}
             </div>

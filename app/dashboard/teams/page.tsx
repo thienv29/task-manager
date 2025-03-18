@@ -1,4 +1,4 @@
-import TeamManagement from "@/components/team-management"
+import TeamManagement from "@/components/management/team/team-management"
 
 export default function TeamsPage() {
     return (

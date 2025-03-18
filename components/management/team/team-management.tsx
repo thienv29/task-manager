@@ -1,17 +1,19 @@
 "use client"
 
-import {useEffect} from "react"
+import {useEffect, useState} from "react"
 import {Button} from "@/components/ui/button"
 import {PlusCircle} from "lucide-react"
-import TeamList from "@/components/team-list"
-import TeamModal from "@/components/team-modal"
+import TeamList from "@/components/management/team/team-list"
+import TeamModal from "@/components/management/team/team-modal"
 import {useTeamStore} from "@/lib/stores/storeTeams";
 import {useUserStore} from "@/lib/stores/storeUsers";
+import {TeamForm} from "@/lib/types";
 
 export default function TeamManagement() {
+    const [isModalOpen, setModalOpen] = useState<boolean>(false)
     const {
-        teams, isModalAddOrUpdateOpen, editingTeam,
-        fetchTeams, setModalOpen, setEditingTeam,
+        teams, editingTeam,
+        fetchTeams, setEditingTeam,
         addTeam, editTeam, deleteTeam
     } = useTeamStore()
 
@@ -24,6 +26,16 @@ export default function TeamManagement() {
         fetchUsers()
     }, [])
 
+    const handleEdit = async (e: TeamForm) => {
+        await editTeam(e);
+        setModalOpen(false);
+    }
+    const handleAdd =  async (e: TeamForm) => {
+        await addTeam(e);
+        setEditingTeam(null)
+        setModalOpen(false);
+    }
+
     return (
         <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -33,15 +45,19 @@ export default function TeamManagement() {
                 </Button>
             </div>
 
-            <TeamList teams={teams} users={users} onEditTeam={setEditingTeam}/>
+            <TeamList teams={teams} users={users} onEditTeam={(e) => {
+                setEditingTeam(e)
+                setModalOpen(true);
+            }}/>
 
             <TeamModal
-                isOpen={isModalAddOrUpdateOpen}
+                isOpen={isModalOpen}
                 onClose={() => {
-                    setModalOpen(false)
+                    console.log("TeamModal onClose called");
+                    setModalOpen(false);
                     setEditingTeam(null)
                 }}
-                onSave={editingTeam ? editTeam : addTeam}
+                onSave={editingTeam ? handleEdit : handleAdd}
                 onDelete={editingTeam ? deleteTeam : undefined}
                 users={users}
                 team={editingTeam}

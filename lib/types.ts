@@ -11,10 +11,16 @@ export type TeamForm = Omit<TeamFull, "createdAt" | "updatedAt" | "tasks">;
 
 export type TaskFull = Prisma.TaskGetPayload<{
     include: {
-        assignee: true;
+        assignees: true;
     };
 }>;
 export type TaskForm = Omit<TaskFull, "createdAt" | "updatedAt">;
+export type ColumnFull = Prisma.ColumnGetPayload<{
+    include: {
+        tasks: true
+    };
+}>;
+export type ColumnForm = Omit<ColumnFull, "tasks">;
 
 export type UserFull = Prisma.UserGetPayload<{
     include: {
@@ -23,4 +29,4 @@ export type UserFull = Prisma.UserGetPayload<{
     };
 }>;
 
-export type UserForm = Omit<UserFull, "createdAt" | "updatedAt" | "assignedTasks">;
+export type UserForm = Omit<UserFull, "createdAt" | "updatedAt" | "assignedTasks" | "team">;
