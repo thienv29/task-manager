@@ -9,17 +9,13 @@ interface TeamListProps {
   onEditTeam: (team: TeamFull) => void
 }
 
-export default function TeamList({ teams, users, onEditTeam }: TeamListProps) {
+export default function TeamList({ teams, onEditTeam }: TeamListProps) {
   const getInitials = (name: string) => {
     return name
       .split(" ")
       .map((part) => part[0])
       .join("")
       .toUpperCase()
-  }
-
-  const getTeamMembers = (team: TeamFull) => {
-    return users.filter((user) => team.users.some((user) => user.id === user.id))
   }
 
   return (
@@ -41,14 +37,14 @@ export default function TeamList({ teams, users, onEditTeam }: TeamListProps) {
               </div>
             </div>
             <div>
-              <p className="text-sm font-medium mb-2">Members ({getTeamMembers(team).length}):</p>
+              <p className="text-sm font-medium mb-2">Members ({team.users.length}):</p>
               <div className="flex -space-x-2 overflow-hidden">
-                {getTeamMembers(team).map((user) => (
+                {team.users.map((user) => (
                   <Avatar key={user.id} className="border-2 border-background">
                     <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                   </Avatar>
                 ))}
-                {getTeamMembers(team).length === 0 && <span className="text-sm text-muted-foreground">No members</span>}
+                {team.users.length === 0 && <span className="text-sm text-muted-foreground">No members</span>}
               </div>
             </div>
           </CardContent>

@@ -1,50 +1,53 @@
-import { create } from 'zustand';
-import type { Task } from '@/lib/types';
-import { tasksAPI } from '@/lib/api-instant';
+import {create} from "zustand"
+import {tasksAPI} from "@/lib/api-instant"
+import {TaskForm, TaskFull} from "@/lib/types"
 
-interface TaskState {
-  tasks: Task[];
-  isModalOpen: boolean;
-  editingTask: Task | null;
-  setTasks: (tasks: Task[]) => void;
-  setIsModalOpen: (isOpen: boolean) => void;
-  setEditingTask: (task: Task | null) => void;
-  addTask: (task: Omit<Task, 'id'>) => void;
-  editTask: (task: Task) => void;
-  deleteTask: (taskId: string) => void;
-  fetchTasks: () => Promise<void>;
+interface TaskStore {
+    tasks: TaskFull[]
+    isModalAddOrUpdateOpen: boolean
+    editingTask: TaskForm | null
+
+    fetchTasks: () => Promise<void>
+    setModalOpen: (isOpen: boolean) => void
+    setEditingTask: (task: TaskForm | null) => void
+
+    addTask: (task: TaskForm) => Promise<void>
+    editTask: (task: TaskForm) => Promise<void>
+    deleteTask: (taskId: number) => Promise<void>
+    showModalAddOrUpdate: () => void
+    hideModalAddOrUpdate: () => void
 }
 
-export const useTaskStore = create<TaskState>((set) => ({
-  tasks: [],
-  isModalOpen: false,
-  editingTask: null,
-  setTasks: (tasks) => set({ tasks }),
-  setIsModalOpen: (isOpen) => set({ isModalOpen: isOpen }),
-  setEditingTask: (task) => set({ editingTask: task }),
-  addTask: (task) =>
-    set((state) => ({
-      tasks: [
-        ...state.tasks,
-        { ...task, id: Math.random().toString(36).substring(2, 9) } as Task,
-      ],
-      isModalOpen: false,
-      editingTask: null,
-    })),
-  editTask: (task) =>
-    set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === task.id ? task : t)),
-      isModalOpen: false,
-      editingTask: null,
-    })),
-  deleteTask: (taskId) =>
-    set((state) => ({
-      tasks: state.tasks.filter((task) => task.id !== taskId),
-      isModalOpen: false,
-      editingTask: null,
-    })),
-  fetchTasks: async () => {
-    const res = await tasksAPI.getAll();
-    set({ tasks: res });
-  },
-}));
+export const useTaskStore = create<TaskStore>((set) => ({
+    tasks: [],
+    isModalAddOrUpdateOpen: false,
+    editingTask: null,
+
+    fetchTasks: async () => {
+        const tasks = await tasksAPI.getAll()
+        set({tasks})
+    },
+    setModalOpen: (isOpen) => set({isModalAddOrUpdateOpen: isOpen}),
+    setEditingTask: async (task) => {
+        set({editingTask: task})
+        await useTaskStore.getState().showModalAddOrUpdate();
+    },
+    showModalAddOrUpdate: () => set({isModalAddOrUpdateOpen: true}),
+    hideModalAddOrUpdate: () => set({isModalAddOrUpdateOpen: false}),
+
+    addTask: async (task) => {
+        await tasksAPI.create(task)
+        await useTaskStore.getState().fetchTasks()
+        await useTaskStore.getState().hideModalAddOrUpdate();
+    },
+    editTask: async (task) => {
+        await tasksAPI.update(task)
+        await useTaskStore.getState().fetchTasks()
+        await useTaskStore.getState().hideModalAddOrUpdate();
+    },
+    deleteTask: async (taskId) => {
+        await tasksAPI.delete(taskId)
+        await useTaskStore.getState().fetchTasks()
+        await useTaskStore.getState().hideModalAddOrUpdate();
+    }
+}))

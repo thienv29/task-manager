@@ -8,55 +8,55 @@ datasource db {
 }
 
 model Task {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   title       String
   description String?
-  priority    String? 
+  priority    String?
 
-  columnId    Int?
-  column      Column?  @relation(fields: [columnId], references: [id], onDelete: SetNull)
+  columnId Int?
+  column   Column? @relation(fields: [columnId], references: [id], onDelete: SetNull)
 
-  assignee    User[]
+  assignee User[]
 
-  teamId      Int?
-  team        Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  teamId Int?
+  team   Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Column {
-  id     Int     @id @default(autoincrement())
-  title  String
-  color  String
+  id    Int    @id @default(autoincrement())
+  title String
+  color String
 
-  tasks  Task[]  @relation
+  tasks Task[] @relation
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   name     String
-  email    String   @unique
+  email    String  @unique
   password String
   role     String?
 
   assignedTasks Task[]
-  teamId       Int?
-  team         Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  teamId        Int?
+  team          Team?  @relation(fields: [teamId], references: [id], onDelete: SetNull)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Team {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   color       String?
 
-  tasks       Task[]
-  users       User[]
+  tasks Task[]
+  users User[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }

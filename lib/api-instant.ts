@@ -26,8 +26,8 @@ function createAPI(resource: string) {
         },
 
 
-        async update(id: string, data: any) {
-            const response = await fetch(`${API_URL}/${id}`, {
+        async update(data: any) {
+            const response = await fetch(`${API_URL}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,9 +37,10 @@ function createAPI(resource: string) {
             return response.json();
         },
 
-        async delete(id: string) {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
+        async delete(id: number) {
+            const response = await fetch(`${API_URL}`, {
+                method: 'DELETE',
+                body: JSON.stringify({id})
             });
             return response.json();
         }

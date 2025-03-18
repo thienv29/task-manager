@@ -8,9 +8,9 @@ export default function Navbar() {
   const pathname = usePathname()
 
   const navItems = [
-    { href: "/", label: "Tasks", icon: CheckSquare },
-    { href: "/users", label: "Users", icon: Users },
-    { href: "/teams", label: "Teams", icon: Briefcase },
+    { href: "/dashboard", label: "Tasks", icon: CheckSquare },
+    { href: "/dashboard/users", label: "Users", icon: Users },
+    { href: "/dashboard/teams", label: "Teams", icon: Briefcase },
   ]
 
   return (

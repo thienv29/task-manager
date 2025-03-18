@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { UserFull } from "@/lib/types";
+import bcrypt from "bcryptjs";
+import {hashPassword} from "@/prisma/seed";
 
 const prisma = new PrismaClient();
 
@@ -13,11 +15,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const passwordHash = await hashPassword(password);
+
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: passwordHash,
         role,
         assignedTasks: {
           connect: assignedTasks?.map((taskId: number) => ({ id: taskId })) || [],
@@ -39,6 +43,7 @@ export async function GET() {
     const users: UserFull[] = await prisma.user.findMany({
       include: {
         assignedTasks: true,
+        team: true
       },
     });
 
