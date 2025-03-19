@@ -8,6 +8,7 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {TeamFull, UserForm} from "@/lib/types"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {User, UserRole} from "@prisma/client";
 
 interface UserModalProps {
     isOpen: boolean
@@ -18,11 +19,11 @@ interface UserModalProps {
     user: UserForm | null
 }
 
-const initUserForm = {
+const initUserForm: UserForm = {
     id: 0,
     name: "",
     email: "",
-    role: "",
+    role: "MEMBER",
     teamId: 0,
     password: "",
 }
@@ -46,7 +47,7 @@ export default function UserModal({isOpen, onClose, onSave, onDelete, teams, use
         setFormData((prev) => ({...prev, teamId: Number(value)}))
     }
     const handleChangeRole = (value: string) => {
-        setFormData((prev) => ({...prev, role: value}))
+        setFormData((prev) => ({...prev, role: value as UserRole}))
     }
 
     const handleSubmit = () => {
@@ -93,9 +94,9 @@ export default function UserModal({isOpen, onClose, onSave, onDelete, teams, use
                                 <SelectValue placeholder="Select role"/>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value={'member'}>Member</SelectItem>
-                                <SelectItem value={'admin'}>Admin</SelectItem>
-                                <SelectItem value={'team_lead'}>Team Lead</SelectItem>
+                                <SelectItem value={'MEMBER'}>Member</SelectItem>
+                                <SelectItem value={'ADMIN'}>Admin</SelectItem>
+                                <SelectItem value={'TEAM_LEAD'}>Team Lead</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

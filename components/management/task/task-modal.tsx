@@ -8,38 +8,44 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
-import type {Column, Task, Team, User} from "@/lib/types"
+import {Column, Team, User} from "@prisma/client";
+import {TaskForm} from "@/lib/types";
+import {Checkbox} from "@/components/ui/checkbox";
 
 interface TaskModalProps {
     isOpen: boolean
     onClose: () => void
-    onSave: (task: Task | Omit<Task, "id">) => void
-    onDelete?: (taskId: string) => void
+    onSave: (task: TaskForm) => void
+    onDelete?: (taskId: number) => void
     columns: Column[]
     teams: Team[]
     users: User[]
-    task: Task | null
+    task: TaskForm | null
+}
+
+const initTaskForm: TaskForm = {
+    id: 0,
+    title: "",
+    description: "",
+    columnId: 0,
+    assignees: [],
+    teamId: 0,
+    priority: "MEDIUM",
 }
 
 export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, teams, users, task}: TaskModalProps) {
-    const [formData, setFormData] = useState<Omit<Task, "id">>({
-        title: "",
-        description: "",
-        columnId: "todo",
-        assigneeId: "",
-        teamId: "",
-        priority: "medium",
-    })
+    const [formData, setFormData] = useState<TaskForm>(initTaskForm)
 
     const [filteredUsers, setFilteredUsers] = useState<User[]>(users)
 
     useEffect(() => {
         if (task) {
             setFormData({
+                id: task.id,
                 title: task.title,
                 description: task.description,
                 columnId: task.columnId,
-                assigneeId: task.assigneeId,
+                assignees: task.assignees,
                 teamId: task.teamId,
                 priority: task.priority,
             })
@@ -51,14 +57,7 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                 setFilteredUsers(users)
             }
         } else {
-            setFormData({
-                title: "",
-                description: "",
-                columnId: "todo",
-                assigneeId: "",
-                teamId: "",
-                priority: "medium",
-            })
+            setFormData(initTaskForm)
             setFilteredUsers(users)
         }
     }, [task, users])
@@ -69,25 +68,18 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
     }
 
     const handleSelectChange = (name: string, value: string) => {
-        if (name === "teamId") {
-            filterUsersByTeam(value)
-
-            // Reset assignee if they're not in the selected team
-            const userInTeam = users.find((user) => user.id === formData.assigneeId && user.teamIds.includes(value))
-
-            setFormData((prev) => ({
-                ...prev,
-                [name]: value,
-                assigneeId: userInTeam ? prev.assigneeId : "",
-            }))
-        } else {
-            setFormData((prev) => ({...prev, [name]: value}))
-        }
+        setFormData((prev) => ({...prev, [name]: value}))
     }
 
-    const filterUsersByTeam = (teamId: string) => {
+
+    const handleChangeTeam = (value: string) => {
+        setFormData((prev) => ({...prev, teamId: Number(value)}))
+        filterUsersByTeam(Number(value))
+    }
+
+    const filterUsersByTeam = (teamId: number) => {
         if (teamId) {
-            const teamUsers = users.filter((user) => user.teamIds?.includes(teamId) || false);
+            const teamUsers = users.filter((user) => user.teamId == (teamId) || false);
             setFilteredUsers(teamUsers);
         } else {
             setFilteredUsers(users);
@@ -109,6 +101,18 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
         }
     }
 
+    const handleMemberToggle = (userId: number) => {
+        setFormData((prev) => {
+            const memberIds = prev.assignees.map(u => u.id).includes(userId)
+                ? prev.assignees.map(u => u.id).filter((id) => id !== userId)
+                : [...prev.assignees.map(u => u.id), userId]
+
+            const userCurrents = users.filter(u => memberIds.includes(u.id))
+
+            return {...prev, users: userCurrents}
+        })
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[500px]">
@@ -126,7 +130,7 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                             <Textarea
                                 id="description"
                                 name="description"
-                                value={formData.description}
+                                value={formData.description || ''}
                                 onChange={handleChange}
                                 rows={3}
                             />
@@ -134,14 +138,14 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="status">Status</Label>
-                                <Select value={formData.columnId}
+                                <Select value={`${formData.columnId}`}
                                         onValueChange={(value) => handleSelectChange("columnId", value)}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select status"/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {columns.map((column) => (
-                                            <SelectItem key={column.id} value={column.id}>
+                                            <SelectItem key={column.id} value={`${column.id}`}>
                                                 {column.title}
                                             </SelectItem>
                                         ))}
@@ -156,23 +160,24 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                                         <SelectValue placeholder="Select priority"/>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="low">Low</SelectItem>
-                                        <SelectItem value="medium">Medium</SelectItem>
-                                        <SelectItem value="high">High</SelectItem>
+                                        <SelectItem value="LOW">Low</SelectItem>
+                                        <SelectItem value="NORMAL">Normal</SelectItem>
+                                        <SelectItem value="MEDIUM">Medium</SelectItem>
+                                        <SelectItem value="HIGH">High</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="team">Team</Label>
-                            <Select value={formData.teamId}
-                                    onValueChange={(value) => handleSelectChange("teamId", value)}>
+                            <Select value={`${formData.teamId}`}
+                                    onValueChange={handleChangeTeam}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select team"/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     {teams.map((team) => (
-                                        <SelectItem key={team.id} value={team.id}>
+                                        <SelectItem key={team.id} value={`${team.id}`}>
                                             {team.name}
                                         </SelectItem>
                                     ))}
@@ -181,23 +186,22 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="assignee">Assignee</Label>
-                            <Select
-                                value={formData.assigneeId}
-                                onValueChange={(value) => handleSelectChange("assigneeId", value)}
-                                disabled={!formData.teamId}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue
-                                        placeholder={formData.teamId ? "Select assignee" : "Select a team first"}/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {filteredUsers.map((user) => (
-                                        <SelectItem key={user.id} value={user.id}>
+                            <div className="grid gap-2 max-h-[200px] overflow-y-auto p-2 border rounded-md">
+                                {filteredUsers.map((user) => (
+                                    <div key={user.id} className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id={`user-${user.id}`}
+                                            checked={formData.assignees.map(u => u.id).includes(user.id)}
+                                            onCheckedChange={() => handleMemberToggle(user.id)}
+                                        />
+                                        <Label htmlFor={`user-${user.id}`} className="cursor-pointer">
                                             {user.name} ({user.role})
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                                        </Label>
+                                    </div>
+                                ))}
+                                {filteredUsers.length === 0 &&
+                                    <p className="text-sm text-muted-foreground">No users available</p>}
+                            </div>
                         </div>
                     </div>
                     <DialogFooter className="flex justify-between">

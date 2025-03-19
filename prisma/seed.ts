@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client';
+import {PrismaClient, UserRole} from '@prisma/client';
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -23,17 +23,17 @@ async function main() {
 
     // Create Users
     const usersData = [
-        {name: 'Alice Johnson', email: 'alice@example.com', role: 'team_lead', teamId: team1.id},
-        {name: 'Bob Smith', email: 'bob@example.com', role: 'member', teamId: team2.id},
-        {name: 'Charlie Brown', email: 'charlie@example.com', role: 'admin', teamId: team1.id},
-        {name: 'David Miller', email: 'david@example.com', role: 'team_lead', teamId: team2.id},
-        {name: 'Emma Wilson', email: 'emma@example.com', role: 'member', teamId: team1.id},
-        {name: 'Frank Adams', email: 'frank@example.com', role: 'member', teamId: team2.id},
-        {name: 'Grace Thomas', email: 'grace@example.com', role: 'team_lead', teamId: team1.id},
-        {name: 'Henry Scott', email: 'henry@example.com', role: 'member', teamId: team2.id},
-        {name: 'Ivy Johnson', email: 'ivy@example.com', role: 'member', teamId: team1.id},
-        {name: 'Jack White', email: 'jack@example.com', role: 'team_lead', teamId: team2.id},
-        {name: 'Karen Black', email: 'karen@example.com', role: 'member', teamId: team1.id},
+        {name: 'Admin', email: 'admin@gmail.com', role: 'ADMIN' as UserRole, teamId: team1.id},
+        {name: 'Alice Johnson', email: 'alice@example.com', role: 'TEAM_LEAD'  as UserRole, teamId: team1.id},
+        {name: 'Bob Smith', email: 'bob@example.com', role: 'MEMBER'  as UserRole, teamId: team2.id},
+        {name: 'David Miller', email: 'david@example.com', role: 'TEAM_LEAD' as UserRole, teamId: team2.id},
+        {name: 'Emma Wilson', email: 'emma@example.com', role: 'MEMBER' as UserRole, teamId: team1.id},
+        {name: 'Frank Adams', email: 'frank@example.com', role: 'MEMBER' as UserRole, teamId: team2.id},
+        {name: 'Grace Thomas', email: 'grace@example.com', role: 'TEAM_LEAD' as UserRole, teamId: team1.id},
+        {name: 'Henry Scott', email: 'henry@example.com', role: 'MEMBER' as UserRole, teamId: team2.id},
+        {name: 'Ivy Johnson', email: 'ivy@example.com', role: 'MEMBER' as UserRole, teamId: team1.id},
+        {name: 'Jack White', email: 'jack@example.com', role: 'TEAM_LEAD' as UserRole, teamId: team2.id},
+        {name: 'Karen Black', email: 'karen@example.com', role: 'MEMBER' as UserRole, teamId: team1.id},
     ];
 
     for (const user of usersData) {
@@ -71,7 +71,7 @@ async function main() {
         data: {
             title: 'Setup Database',
             description: 'Configure Prisma and MySQL',
-            priority: 'High',
+            priority: 'HIGH',
             columnId: todoColumn.id,
             teamId: team1.id,
             assignees: {connect: [{id: 1}]},
@@ -82,7 +82,7 @@ async function main() {
         data: {
             title: 'Create Landing Page',
             description: 'Design and develop marketing page',
-            priority: 'Medium',
+            priority: 'NORMAL',
             columnId: inProgressColumn.id,
             teamId: team2.id,
             assignees: {connect: [{id: 2}]},

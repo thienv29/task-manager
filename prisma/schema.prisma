@@ -7,11 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TaskPriority {
+  LOW
+  NORMAL
+  MEDIUM
+  HIGH
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+  TEAM_LEAD
+}
+
 model Task {
   id          Int     @id @default(autoincrement())
   title       String
   description String?
-  priority    String?
+
+  priority TaskPriority @default(NORMAL)
 
   columnId Int?
   column   Column? @relation(fields: [columnId], references: [id], onDelete: SetNull)
@@ -34,11 +48,11 @@ model Column {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   name     String
-  email    String  @unique
+  email    String   @unique
   password String
-  role     String?
+  role     UserRole @default(MEMBER)
 
   assignedTasks Task[]
   teamId        Int?

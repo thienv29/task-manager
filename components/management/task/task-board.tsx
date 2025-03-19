@@ -31,7 +31,7 @@ export default function TaskBoard() {
 
 
     const handleDragStart = (e: React.DragEvent, taskId: number) => {
-        e.dataTransfer.setData("taskId", taskId);
+        e.dataTransfer.setData("taskId", taskId.toString());
     };
 
     const handleDrop = (e: React.DragEvent, columnId: number) => {
