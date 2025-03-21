@@ -5,6 +5,7 @@ import "./globals.css"
 import './globals.css'
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {SessionProvider} from "next-auth/react";
+import {Toaster} from "sonner";
 
 const inter = Inter({subsets: ["latin"]})
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
                 {children}
             </ThemeProvider>
+            <Toaster position={'top-center'} />
         </SessionProvider>
         </body>
         </html>
