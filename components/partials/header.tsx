@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Menu} from "lucide-react";
-import {auth} from "@/auth";
+import {auth} from "@/lib/auth";
 import React from "react";
 import UserMenu from "@/components/user-menu";
 
