@@ -15,19 +15,22 @@ function createAPI(resource: string) {
             return response.json();
         },
 
-        async getAll() {
-            const response = await fetch(API_URL);
-            return response.json();
+        async getAll(params: Record<string, any> = {}) {
+            try {
+                const queryString = new URLSearchParams(params).toString();
+                const response = await fetch(`${API_URL}?${queryString}`);
+
+                if (!response.ok) throw new Error("Failed to fetch resources");
+                return await response.json();
+            } catch (error) {
+                console.error("Fetch error:", error);
+                throw error;
+            }
         },
 
-        async getPagination(page = 1, limit = 10) {
-            const response = await fetch(`${API_URL}?_page=${page}&_limit=${limit}`);
-            return response.json();
-        },
 
-
-        async update(id: string, data: any) {
-            const response = await fetch(`${API_URL}/${id}`, {
+        async update(data: any) {
+            const response = await fetch(`${API_URL}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,9 +40,10 @@ function createAPI(resource: string) {
             return response.json();
         },
 
-        async delete(id: string) {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
+        async delete(id: number) {
+            const response = await fetch(`${API_URL}`, {
+                method: 'DELETE',
+                body: JSON.stringify({id})
             });
             return response.json();
         }
@@ -50,3 +54,4 @@ function createAPI(resource: string) {
 export const teamsAPI = createAPI('teams');
 export const tasksAPI = createAPI('tasks');
 export const usersAPI = createAPI('users');
+export const columnsAPI = createAPI('columns');
