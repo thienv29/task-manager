@@ -6,8 +6,7 @@ import {Button} from "@/components/ui/button"
 import {PlusCircle} from "lucide-react"
 import TaskColumn from "@/components/management/task/task-column"
 import TaskModal from "@/components/management/task/task-modal"
-import {tasksAPI, teamsAPI} from "@/lib/api-instant"
-import {ColumnFull, TaskForm, TaskFull, TeamFull, UserFull} from "@/lib/types";
+import {TaskForm} from "@/lib/types";
 import {useColumnStore} from "@/lib/stores/storeColumns";
 import {useUserStore} from "@/lib/stores/storeUsers";
 import {useTaskStore} from "@/lib/stores/storeTasks";

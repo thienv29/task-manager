@@ -30,7 +30,7 @@ export default function TeamManagement() {
         await editTeam(e);
         setModalOpen(false);
     }
-    const handleAdd =  async (e: TeamForm) => {
+    const handleAdd = async (e: TeamForm) => {
         await addTeam(e);
         setEditingTeam(null)
         setModalOpen(false);

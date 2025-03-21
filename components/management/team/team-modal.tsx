@@ -12,7 +12,6 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
 import {User} from "@prisma/client";
 import {TeamForm} from "@/lib/types";
 import {ConfirmDialog} from "@/components/confirm-dialog";
-import {Archive} from "lucide-react";
 
 interface TeamModalProps {
     isOpen: boolean
@@ -95,8 +94,8 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
 
     return (
         <>
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
+            <Dialog open={isOpen} onOpenChange={onClose}>
+                <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
                         <DialogTitle>{team ? "Edit Team" : "Create New Team"}</DialogTitle>
                     </DialogHeader>
@@ -165,7 +164,7 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
                                 variant="destructive"
                                 onConfirm={handleDelete}
                                 trigger={
-                                    <Button type="button" variant="destructive" >
+                                    <Button type="button" variant="destructive">
                                         Delete
                                     </Button>
                                 }
@@ -176,14 +175,14 @@ export default function TeamModal({isOpen, onClose, onSave, onDelete, users, tea
                             <Button type="button" variant="outline" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button onClick={handleSubmit} >{team ? "Save Changes" : "Create Team"}</Button>
+                            <Button onClick={handleSubmit}>{team ? "Save Changes" : "Create Team"}</Button>
                         </div>
                     </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
 
 
-    </>
+        </>
     )
 }
 

@@ -8,7 +8,7 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {TeamFull, UserForm} from "@/lib/types"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {User, UserRole} from "@prisma/client";
+import {UserRole} from "@prisma/client";
 
 interface UserModalProps {
     isOpen: boolean

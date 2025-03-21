@@ -1,10 +1,9 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
-import { AlertCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import {useState} from "react"
+import {AlertCircle} from "lucide-react"
+import {Button} from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -47,7 +46,7 @@ export function ConfirmDialog({
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                        {variant === "destructive" && <AlertCircle className="h-5 w-5 text-destructive" />}
+                        {variant === "destructive" && <AlertCircle className="h-5 w-5 text-destructive"/>}
                         {title}
                     </DialogTitle>
                     <DialogDescription>{description}</DialogDescription>

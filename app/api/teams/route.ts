@@ -17,26 +17,26 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-    const {name, description, color, users, tasks} = await req.json();
+        const {name, description, color, users, tasks} = await req.json();
 
-    const team = await prisma.team.create({
-        data: {
-            name,
-            description,
-            color,
-            users: {
-                connect: users?.map((user: UserFull) => ({id: user.id})) || [],
+        const team = await prisma.team.create({
+            data: {
+                name,
+                description,
+                color,
+                users: {
+                    connect: users?.map((user: UserFull) => ({id: user.id})) || [],
+                },
+                tasks: {
+                    connect: tasks?.map((task: TaskFull) => ({id: task.id})) || [],
+                },
             },
-            tasks: {
-                connect: tasks?.map((task: TaskFull) => ({id: task.id})) || [],
-            },
-        },
-        include: {users: true, tasks: true},
-    });
+            include: {users: true, tasks: true},
+        });
 
-    return NextResponse.json(team, {status: 201});
+        return NextResponse.json(team, {status: 201});
     } catch (error) {
-      return NextResponse.json({ error: "Failed to create team" }, { status: 500 });
+        return NextResponse.json({error: "Failed to create team"}, {status: 500});
     }
 }
 

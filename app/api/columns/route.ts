@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {PrismaClient} from "@prisma/client";
-import {ColumnFull, UserFull} from "@/lib/types";
+import {ColumnFull} from "@/lib/types";
 
 const prisma = new PrismaClient();
 
@@ -17,22 +17,22 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-    const {title, color, tasks} = await req.json();
+        const {title, color, tasks} = await req.json();
 
-    const column = await prisma.column.create({
-        data: {
-            title,
-            color,
-            tasks: {
-                connect: tasks?.map((task: ColumnFull) => ({id: task.id})) || [],
+        const column = await prisma.column.create({
+            data: {
+                title,
+                color,
+                tasks: {
+                    connect: tasks?.map((task: ColumnFull) => ({id: task.id})) || [],
+                },
             },
-        },
-        include: { tasks: true},
-    });
+            include: {tasks: true},
+        });
 
-    return NextResponse.json(column, {status: 201});
+        return NextResponse.json(column, {status: 201});
     } catch (error) {
-      return NextResponse.json({ error: "Failed to create column" }, { status: 500 });
+        return NextResponse.json({error: "Failed to create column"}, {status: 500});
     }
 }
 
@@ -48,7 +48,7 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
     try {
-        const {id, title,color, tasks} = await req.json();
+        const {id, title, color, tasks} = await req.json();
         const updatedTeam = await prisma.column.update({
             where: {id},
             data: {

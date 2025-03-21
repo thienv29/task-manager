@@ -3,19 +3,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Menu} from "lucide-react";
 import {auth} from "@/auth";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import React from "react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {signOut} from "next-auth/react"
 import UserMenu from "@/components/user-menu";
 
 export default async function Header() {

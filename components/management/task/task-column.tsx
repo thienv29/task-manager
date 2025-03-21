@@ -1,6 +1,6 @@
 import type React from "react"
 import TaskCard from "@/components/management/task/task-card"
-import type {ColumnFull, TaskFull, TeamFull, UserFull} from "@/lib/types"
+import type {ColumnFull, TaskFull} from "@/lib/types"
 
 interface TaskColumnProps {
     column: ColumnFull

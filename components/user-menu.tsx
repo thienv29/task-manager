@@ -15,8 +15,8 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {signOut, useSession} from "next-auth/react";
 import React from "react";
 
-export default  function UserMenu() {
-    const { data: session } = useSession()
+export default function UserMenu() {
+    const {data: session} = useSession()
     return (
         <>
             {!session?.user && <Button asChild variant="ghost" className="hidden md:inline-flex">

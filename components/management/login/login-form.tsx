@@ -17,7 +17,7 @@ export default function LoginForm() {
     }
 
     const handleSignIn = async () => {
-        await signIn("credentials", {...formData, redirectTo:'/dashboard'})
+        await signIn("credentials", {...formData, redirectTo: '/dashboard'})
     }
     return (
         <div className="space-y-6">

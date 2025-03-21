@@ -2,7 +2,7 @@ import type React from "react"
 import {Card, CardContent, CardFooter} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
 import {Avatar, AvatarFallback} from "@/components/ui/avatar"
-import {TaskFull, TeamFull, UserFull} from "@/lib/types";
+import {TaskFull, TeamFull} from "@/lib/types";
 import {User} from "@prisma/client";
 
 interface TaskCardProps {

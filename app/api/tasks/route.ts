@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 
 export async function GET() {
     // try {
-        const tasks: TaskFull[] = await prisma.task.findMany({
-            include: {assignees: true},
-        });
-        return NextResponse.json(tasks, {status: 200});
+    const tasks: TaskFull[] = await prisma.task.findMany({
+        include: {assignees: true},
+    });
+    return NextResponse.json(tasks, {status: 200});
     // } catch (error) {
     //     return NextResponse.json({error: "Failed to fetch tasks"}, {status: 500});
     // }

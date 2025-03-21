@@ -1,6 +1,5 @@
 import {NextResponse} from "next/server";
 import {PrismaClient} from "@prisma/client";
-import {UserFull} from "@/lib/types";
 import {hashPassword} from "@/lib/utils";
 
 const prisma = new PrismaClient();
@@ -34,18 +33,18 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
     try {
-        const { search, page, limit, ...filters } = Object.fromEntries(new URL(req.url).searchParams);
+        const {search, page, limit, ...filters} = Object.fromEntries(new URL(req.url).searchParams);
 
         const where: any = {};
 
         for (const key in filters) {
-            where[key] = { equals: filters[key] };
+            where[key] = {equals: filters[key]};
         }
 
         if (search) {
             where.OR = [
-                { name: { contains: search, mode: "insensitive" } },
-                { email: { contains: search, mode: "insensitive" } },
+                {name: {contains: search, mode: "insensitive"}},
+                {email: {contains: search, mode: "insensitive"}},
             ];
         }
 
@@ -67,14 +66,14 @@ export async function GET(req: Request) {
                 take: pageSize,
             });
 
-            totalUsers = await prisma.user.count({ where });
+            totalUsers = await prisma.user.count({where});
 
             return NextResponse.json({
                 total: totalUsers,
                 page: pageNumber,
                 limit: pageSize,
                 data: users
-            }, { status: 200 });
+            }, {status: 200});
         } else {
             users = await prisma.user.findMany({
                 where,
@@ -84,11 +83,11 @@ export async function GET(req: Request) {
                 }
             });
 
-            return NextResponse.json(users, { status: 200 });
+            return NextResponse.json(users, {status: 200});
         }
     } catch (error) {
         console.error("Error fetching users:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return NextResponse.json({error: "Internal server error"}, {status: 500});
     }
 }
 

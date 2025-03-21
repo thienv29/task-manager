@@ -12,7 +12,7 @@ export async function hashPassword(password: string) {
 }
 
 export const roleLabels = {
-    ADMIN: { label: "Admin", className: "bg-red-100 text-red-800" },
-    MEMBER: { label: "Member", className: "bg-gray-100 text-gray-800" },
-    TEAM_LEAD: { label: "Team Lead", className: "bg-blue-100 text-blue-800" },
+    ADMIN: {label: "Admin", className: "bg-red-100 text-red-800"},
+    MEMBER: {label: "Member", className: "bg-gray-100 text-gray-800"},
+    TEAM_LEAD: {label: "Team Lead", className: "bg-blue-100 text-blue-800"},
 };
