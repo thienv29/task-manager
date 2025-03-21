@@ -39,7 +39,6 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const {id} = await req.json();
-        console.log(id)
         await prisma.column.delete({where: {id}});
         return NextResponse.json({message: "Team deleted successfully"});
     } catch (error) {

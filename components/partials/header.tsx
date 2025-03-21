@@ -59,7 +59,7 @@ export default async function Header() {
                 <div className="flex items-center gap-4">
                     <UserMenu/>
                     <Button asChild>
-                        <Link href="#">Get Started</Link>
+                        <Link href="/dashboard">Get Started</Link>
                     </Button>
                     <Button variant="ghost" size="icon" className="md:hidden">
                         <Menu className="h-5 w-5"/>

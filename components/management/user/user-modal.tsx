@@ -109,7 +109,7 @@ export default function UserModal({isOpen, onClose, onSave, onDelete, teams, use
                             <SelectContent>
                                 <SelectItem value={'0'}>None</SelectItem>
                                 {teams.map(team =>
-                                    <SelectItem value={`${team.id}`}>{team.name}</SelectItem>
+                                    <SelectItem value={`${team.id}`} key={team.id}>{team.name}</SelectItem>
                                 )}
                             </SelectContent>
                         </Select>

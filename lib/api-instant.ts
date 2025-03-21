@@ -15,14 +15,17 @@ function createAPI(resource: string) {
             return response.json();
         },
 
-        async getAll() {
-            const response = await fetch(API_URL);
-            return response.json();
-        },
+        async getAll(params: Record<string, any> = {}) {
+            try {
+                const queryString = new URLSearchParams(params).toString();
+                const response = await fetch(`${API_URL}?${queryString}`);
 
-        async getPagination(page = 1, limit = 10) {
-            const response = await fetch(`${API_URL}?_page=${page}&_limit=${limit}`);
-            return response.json();
+                if (!response.ok) throw new Error("Failed to fetch resources");
+                return await response.json();
+            } catch (error) {
+                console.error("Fetch error:", error);
+                throw error;
+            }
         },
 
 

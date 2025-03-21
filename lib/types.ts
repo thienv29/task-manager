@@ -30,3 +30,9 @@ export type UserFull = Prisma.UserGetPayload<{
 }>;
 
 export type UserForm = Omit<UserFull, "createdAt" | "updatedAt" | "assignedTasks" | "team">;
+
+
+export type LoginModel = {
+    email: string,
+    password: string
+}

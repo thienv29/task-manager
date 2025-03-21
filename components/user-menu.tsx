@@ -1,3 +1,4 @@
+"use client"
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -11,15 +12,13 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import React from "react";
-import {auth} from "@/auth";
 
-export default async function UserMenu() {
-    const session = await auth()
+export default  function UserMenu() {
+    const { data: session } = useSession()
     return (
         <>
-
             {!session?.user && <Button asChild variant="ghost" className="hidden md:inline-flex">
                 <Link href="/login">Log in</Link>
             </Button>}
@@ -63,7 +62,7 @@ export default async function UserMenu() {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem className='cursor-pointer text-red-500'  onClick={signOut}>
+                        <DropdownMenuItem className='cursor-pointer text-red-500' onClick={() => signOut()}>
                             Log out
                             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                         </DropdownMenuItem>

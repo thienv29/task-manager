@@ -32,19 +32,63 @@ export async function POST(req: Request) {
     }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        const users: UserFull[] = await prisma.user.findMany({
-            include: {
-                assignedTasks: true,
-                team: true
-            },
-        });
+        const { search, page, limit, ...filters } = Object.fromEntries(new URL(req.url).searchParams);
 
-        return NextResponse.json(users, {status: 200});
+        const where: any = {};
+
+        for (const key in filters) {
+            where[key] = { equals: filters[key] };
+        }
+
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+        let users;
+        let totalUsers;
+
+        if (page && limit) {
+            const pageNumber = parseInt(page as string) || 1;
+            const pageSize = parseInt(limit as string) || 10;
+            const skip = (pageNumber - 1) * pageSize;
+
+            users = await prisma.user.findMany({
+                where,
+                include: {
+                    assignedTasks: true,
+                    team: true
+                },
+                skip,
+                take: pageSize,
+            });
+
+            totalUsers = await prisma.user.count({ where });
+
+            return NextResponse.json({
+                total: totalUsers,
+                page: pageNumber,
+                limit: pageSize,
+                data: users
+            }, { status: 200 });
+        } else {
+            users = await prisma.user.findMany({
+                where,
+                include: {
+                    assignedTasks: true,
+                    team: true
+                }
+            });
+
+            return NextResponse.json(users, { status: 200 });
+        }
     } catch (error) {
         console.error("Error fetching users:", error);
-        return NextResponse.json({error: "Internal server error"}, {status: 500});
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
 

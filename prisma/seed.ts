@@ -38,7 +38,7 @@ async function main() {
 
     for (const user of usersData) {
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash("123123123", salt);
+        const hashedPassword = await bcrypt.hash(process.env.PASSWORD_DEFAULT, salt);
         await prisma.user.create({
             data: {...user, password: hashedPassword},
         });

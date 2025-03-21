@@ -6,6 +6,7 @@ import {Label} from "@/components/ui/label"
 import {Separator} from "@/components/ui/separator"
 import {Card, CardContent, CardFooter} from "@/components/ui/card"
 import {signIn} from "next-auth/react"
+import LoginForm from "@/components/management/login/login-form";
 
 
 export default function LoginPage(props: {
@@ -27,35 +28,7 @@ export default function LoginPage(props: {
 
                 <Card>
                     <CardContent className="pt-6">
-                        <form className="space-y-6" action="#" method="POST">
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    placeholder="name@example.com"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Link href="/forgot-password"
-                                          className="text-sm font-medium text-primary hover:text-primary/90">
-                                        Forgot your password?
-                                    </Link>
-                                </div>
-                                <Input id="password" name="password" type="password" autoComplete="current-password"
-                                       required/>
-                            </div>
-
-                            <Button type="submit" className="w-full">
-                                Sign in
-                            </Button>
-                        </form>
+                        <LoginForm/>
 
                         <div className="mt-6">
                             <div className="relative">
