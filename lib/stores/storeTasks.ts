@@ -8,7 +8,6 @@ interface TaskStore {
 
     fetchTasks: () => void
     setEditingTask: (task: TaskForm | null) => void
-
     addTask: (task: TaskForm) => Promise<void>
     editTask: (task: TaskForm) => Promise<void>
     deleteTask: (taskId: number) => Promise<void>
