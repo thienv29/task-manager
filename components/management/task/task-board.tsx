@@ -15,45 +15,52 @@ import {useTeamStore} from "@/lib/stores/storeTeams";
 export default function TaskBoard() {
     const {columns, fetchColumns} = useColumnStore();
     const {users, fetchUsers} = useUserStore();
-    const {tasks, fetchTasks} = useTaskStore();
+    const {
+        tasks,
+        editingTask,
+        setEditingTask,
+        fetchTasks,
+        addTask,
+        editTask,
+        deleteTask,
+    } = useTaskStore();
     const {teams, fetchTeams} = useTeamStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingTask, setEditingTask] = useState<TaskForm | null>(null);
+
 
     useEffect(() => {
         fetchColumns();
         fetchUsers();
         fetchTasks();
         fetchTeams();
-    }, [])
-
+    }, []);
 
     const handleDragStart = (e: React.DragEvent, taskId: number) => {
         e.dataTransfer.setData("taskId", taskId.toString());
+        setEditingTask(tasks.find(t => t.id == taskId))
     };
 
-    const handleDrop = (e: React.DragEvent, columnId: number) => {
-        const taskId = e.dataTransfer.getData("taskId");
-
+    const handleDrop =async (e: React.DragEvent, columnId: number) => {
+        const taskId = Number(e.dataTransfer.getData("taskId"));
+        await editTask({...editingTask, columnId})
+        setEditingTask(null)
     };
 
-    const handleAddTask = (task: TaskForm) => {
-        const newTask = {
-            ...task,
-            id: Math.random().toString(36).substring(2, 9),
-        };
-
+    const handleAddTask = async (task: TaskForm) => {
+        await addTask(task);
         setIsModalOpen(false);
         setEditingTask(null);
     };
 
-    const handleEditTask = (task: TaskForm) => {
+    const handleEditTask = async (task: TaskForm) => {
+        await editTask(task);
         setIsModalOpen(false);
         setEditingTask(null);
     };
 
-    const handleDeleteTask = (taskId: string) => {
+    const handleDeleteTask = async (taskId: number) => {
+        await deleteTask(taskId);
         setIsModalOpen(false);
         setEditingTask(null);
     };

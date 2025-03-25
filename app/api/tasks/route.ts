@@ -1,23 +1,23 @@
 import {NextResponse} from "next/server";
 import {PrismaClient} from "@prisma/client";
-import {TaskFull} from "@/lib/types";
+import {TaskFull, TeamFull, UserFull} from "@/lib/types";
 
 const prisma = new PrismaClient();
 
 export async function GET() {
-    // try {
+    try {
     const tasks: TaskFull[] = await prisma.task.findMany({
         include: {assignees: true},
     });
     return NextResponse.json(tasks, {status: 200});
-    // } catch (error) {
-    //     return NextResponse.json({error: "Failed to fetch tasks"}, {status: 500});
-    // }
+    } catch (error) {
+        return NextResponse.json({error: "Failed to fetch tasks"}, {status: 500});
+    }
 }
 
 export async function POST(req: Request) {
     try {
-        const {title, description, priority, columnId, assignee, teamId} = await req.json();
+        const {title, description, priority, columnId, assignees, teamId} = await req.json();
 
         const newTask = await prisma.task.create({
             data: {
@@ -26,9 +26,10 @@ export async function POST(req: Request) {
                 priority,
                 columnId,
                 assignees: {
-                    connect: assignee.map((id: number) => ({id}))
+                    connect: assignees?.map((user: UserFull) => ({id: user.id})) || [],
+                    
                 },
-                teamId,
+                teamId: teamId == 0 ? null : teamId,
             },
         });
 
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
     try {
-        const {id, title, description, priority, columnId, assignee, teamId} = await req.json();
+        const {id, title, description, priority, columnId, assignees, teamId} = await req.json();
 
         if (!id) {
             return NextResponse.json({error: "Task ID is required"}, {status: 400});
@@ -56,7 +57,7 @@ export async function PUT(req: Request) {
                 priority,
                 columnId,
                 assignees: {
-                    set: assignee.map((id: number) => ({id}))
+                    set: assignees?.map((user: UserFull) => ({id: user.id})) || [],
                 },
                 teamId,
             },
@@ -71,20 +72,10 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
     try {
-        const {searchParams} = new URL(req.url);
-        const id = searchParams.get("id");
-
-        if (!id) {
-            return NextResponse.json({error: "Task ID is required"}, {status: 400});
-        }
-
-        await prisma.task.delete({
-            where: {id: Number(id)},
-        });
-
-        return NextResponse.json({message: "Task deleted successfully"}, {status: 200});
+        const {id} = await req.json();
+        await prisma.task.delete({where: {id}});
+        return NextResponse.json({message: "Task deleted successfully"});
     } catch (error) {
-        console.error("Error deleting task:", error);
-        return NextResponse.json({error: "Internal server error"}, {status: 500});
-    }
+        return NextResponse.json({error: "Failed to delete Task"}, {status: 500});1 
+    } 
 }

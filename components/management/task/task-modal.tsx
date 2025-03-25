@@ -71,6 +71,10 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
         setFormData((prev) => ({...prev, [name]: value}))
     }
 
+    const handleChangeStatus = (value: string) => {
+        setFormData((prev) => ({...prev, columnId: Number(value)}))
+    }
+
 
     const handleChangeTeam = (value: string) => {
         setFormData((prev) => ({...prev, teamId: Number(value)}))
@@ -109,7 +113,7 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
 
             const userCurrents = users.filter(u => memberIds.includes(u.id))
 
-            return {...prev, users: userCurrents}
+            return {...prev, assignees: userCurrents}
         })
     }
 
@@ -139,7 +143,7 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                             <div className="grid gap-2">
                                 <Label htmlFor="status">Status</Label>
                                 <Select value={`${formData.columnId}`}
-                                        onValueChange={(value) => handleSelectChange("columnId", value)}>
+                                        onValueChange={handleChangeStatus}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select status"/>
                                     </SelectTrigger>

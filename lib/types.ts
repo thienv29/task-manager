@@ -36,3 +36,9 @@ export type LoginModel = {
     email: string,
     password: string
 }
+
+export const EVENT_TASK = {
+    ADD_TASK: 'ADD_TASK',
+    EDIT_TASK: 'EDIT_TASK',
+    DELETE_TASK: 'DELETE_TASK'
+}
