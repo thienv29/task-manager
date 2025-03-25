@@ -43,7 +43,6 @@ export default function TaskBoard() {
 
     const handleDrop =async (e: React.DragEvent, columnId: number) => {
         const taskId = Number(e.dataTransfer.getData("taskId"));
-        console.log(columnId, taskId, editingTask);
         await editTask({...editingTask, columnId})
         setEditingTask(null)
     };
