@@ -16,104 +16,54 @@ export default function TaskBoard() {
     const {columns, fetchColumns} = useColumnStore();
     const {users, fetchUsers} = useUserStore();
     const {
-        tasks, 
+        tasks,
         editingTask,
         setEditingTask,
         fetchTasks,
-        addTask,   
+        addTask,
         editTask,
         deleteTask,
     } = useTaskStore();
     const {teams, fetchTeams} = useTeamStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [socket, setSocket] = useState<WebSocket | null>(null); // Khai báo biến socket và setSocket
+
 
     useEffect(() => {
         fetchColumns();
         fetchUsers();
         fetchTasks();
         fetchTeams();
-        const ws = setupWebSocket(); // Thiết lập kết nối WebSocket
-        setSocket(ws);
-
-        return () => {
-            if (ws) {
-                ws.close();
-            }
-        };
     }, []);
-
-    const setupWebSocket = (): WebSocket => {
-        // Thiết lập kết nối WebSocket
-        const socket = new WebSocket("ws://localhost:8080");
-
-        socket.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        socket.onmessage = async (event) => {
-            let message;
-            if (event.data instanceof Blob) {
-                // Chuyển đổi Blob thành chuỗi
-                const text = await event.data.text();
-                message = JSON.parse(text);
-            } else {
-                message = JSON.parse(event.data);
-            }
-            console.log("Received message:", message);
-            if (message.type === "TASK_UPDATED") {
-                await fetchTasks(); // Lấy lại danh sách tasks để cập nhật state
-                console.log("Tasks updated");
-            }
-        };
-
-        socket.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        socket.onclose = (event) => {
-            console.log("WebSocket connection closed:", event);
-        };
-
-        return socket;
-    }
 
     const handleDragStart = (e: React.DragEvent, taskId: number) => {
         e.dataTransfer.setData("taskId", taskId.toString());
+        setEditingTask(tasks.find(t => t.id == taskId))
     };
 
-    const handleDrop = (e: React.DragEvent, columnId: number) => {
-        const taskId = e.dataTransfer.getData("taskId");
-        // Xử lý logic khi thả task vào cột
+    const handleDrop =async (e: React.DragEvent, columnId: number) => {
+        const taskId = Number(e.dataTransfer.getData("taskId"));
+        console.log(columnId, taskId, editingTask);
+        await editTask({...editingTask, columnId})
+        setEditingTask(null)
     };
 
     const handleAddTask = async (task: TaskForm) => {
         await addTask(task);
         setIsModalOpen(false);
         setEditingTask(null);
-        if (socket) {
-            socket.send(JSON.stringify({ type: "TASK_UPDATED" }));
-        }
     };
 
-    const handleEditTask = (task: TaskForm) => {
-        editTask(task);
+    const handleEditTask = async (task: TaskForm) => {
+        await editTask(task);
         setIsModalOpen(false);
         setEditingTask(null);
-        if (socket) {
-            console.log("Sending message to server");
-            socket.send(JSON.stringify({ type: "TASK_UPDATED" }));
-        }
     };
 
-    const handleDeleteTask = (taskId: number) => {
-        deleteTask(taskId);
+    const handleDeleteTask = async (taskId: number) => {
+        await deleteTask(taskId);
         setIsModalOpen(false);
         setEditingTask(null);
-        if (socket) {
-            socket.send(JSON.stringify({ type: "TASK_UPDATED" }));
-        }
     };
 
     const openEditModal = (task: TaskForm) => {

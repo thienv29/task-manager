@@ -29,7 +29,7 @@ export async function POST(req: Request) {
                     connect: assignees?.map((user: UserFull) => ({id: user.id})) || [],
                     
                 },
-                teamId,
+                teamId: teamId == 0 ? null : teamId,
             },
         });
 

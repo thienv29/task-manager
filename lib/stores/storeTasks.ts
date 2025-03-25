@@ -1,6 +1,7 @@
 import {create} from "zustand"
 import {tasksAPI} from "@/lib/api-instant"
-import {TaskForm, TaskFull} from "@/lib/types"
+import {EVENT_TASK, TaskForm, TaskFull} from "@/lib/types"
+import {useWebSocketStore} from "@/lib/stores/storeWebsocket";
 
 interface TaskStore {
     tasks: TaskFull[]
@@ -18,6 +19,7 @@ export const useTaskStore = create<TaskStore>((set) => ({
     editingTask: null,
 
     fetchTasks: async () => {
+        console.log('fetch task')
         const tasks = await tasksAPI.getAll()
         set({tasks})
     },
@@ -26,14 +28,17 @@ export const useTaskStore = create<TaskStore>((set) => ({
     },
     addTask: async (task) => {
         await tasksAPI.create(task)
+        useWebSocketStore.getState().sendMessage(EVENT_TASK.ADD_TASK)
         useTaskStore.getState().fetchTasks()
     },
     editTask: async (task) => {
         await tasksAPI.update(task)
+        useWebSocketStore.getState().sendMessage(EVENT_TASK.EDIT_TASK)
         useTaskStore.getState().fetchTasks()
     },
     deleteTask: async (taskId) => {
         await tasksAPI.delete(taskId)
+        useWebSocketStore.getState().sendMessage(EVENT_TASK.DELETE_TASK)
         useTaskStore.getState().fetchTasks()
     }
 }))
