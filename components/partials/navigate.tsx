@@ -10,6 +10,7 @@ export default function Navigate({isOutSite = false}) {
         {href: "/dashboard", label: "Tasks", icon: CheckSquare},
         {href: "/dashboard/users", label: "Users", icon: Users},
         {href: "/dashboard/teams", label: "Teams", icon: Briefcase},
+        {href: "/dashboard/columns", label: "Columns", icon: Briefcase},
     ]
     if (!isOutSite) {
         return (

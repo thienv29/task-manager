@@ -17,7 +17,7 @@ export type TaskFull = Prisma.TaskGetPayload<{
 export type TaskForm = Omit<TaskFull, "createdAt" | "updatedAt">;
 export type ColumnFull = Prisma.ColumnGetPayload<{
     include: {
-        tasks: true
+        tasks: true;
     };
 }>;
 export type ColumnForm = Omit<ColumnFull, "tasks">;

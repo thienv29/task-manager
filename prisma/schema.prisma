@@ -44,7 +44,7 @@ model Column {
   title String
   color String
 
-  tasks Task[] @relation
+  tasks Task[]
 }
 
 model User {
