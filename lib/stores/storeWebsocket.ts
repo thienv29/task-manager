@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import {EVENT_TASK} from "@/lib/types";
+import {EVENT_COLUMN, EVENT_TASK} from "@/lib/types";
 import {useTaskStore} from "@/lib/stores/storeTasks";
+import { useColumnStore } from "@/lib/stores/storeColumns";
 
 interface WebSocketState {
     socket: WebSocket | null;
@@ -25,6 +26,11 @@ export const useWebSocketStore = create<WebSocketState>((set, get) => ({
             const cleanData = event.data.split(': ').pop();  // Lấy phần sau dấu ": "
 
             switch (cleanData) {
+                case EVENT_COLUMN.ADD_COLUMN:
+                case EVENT_COLUMN.EDIT_COLUMN:
+                case EVENT_COLUMN.DELETE_COLUMN:
+                    useColumnStore.getState().fetchColumns();
+                    break;
                 case EVENT_TASK.ADD_TASK:
                 case EVENT_TASK.EDIT_TASK:
                 case EVENT_TASK.DELETE_TASK:

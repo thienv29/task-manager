@@ -17,15 +17,13 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        const {title, color, tasks} = await req.json();
+        const {title, color} = await req.json();
 
         const column = await prisma.column.create({
             data: {
                 title,
                 color,
-                tasks: {
-                    connect: tasks?.map((task: ColumnFull) => ({id: task.id})) || [],
-                },
+                
             },
             include: {tasks: true},
         });

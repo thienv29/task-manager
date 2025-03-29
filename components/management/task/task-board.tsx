@@ -6,11 +6,12 @@ import {Button} from "@/components/ui/button"
 import {PlusCircle} from "lucide-react"
 import TaskColumn from "@/components/management/task/task-column"
 import TaskModal from "@/components/management/task/task-modal"
-import {TaskForm} from "@/lib/types";
+import {ColumnForm, TaskForm} from "@/lib/types";
 import {useColumnStore} from "@/lib/stores/storeColumns";
 import {useUserStore} from "@/lib/stores/storeUsers";
 import {useTaskStore} from "@/lib/stores/storeTasks";
 import {useTeamStore} from "@/lib/stores/storeTeams";
+import ColumnModal from "@/components/management/column/column-modal"
 
 export default function TaskBoard() {
     const {columns, fetchColumns} = useColumnStore();
@@ -24,10 +25,20 @@ export default function TaskBoard() {
         editTask,
         deleteTask,
     } = useTaskStore();
+
+    const {
+        setEditingColumn,
+        editingColumn,
+        addColumn,
+        editColumn,
+        deleteColumn,
+    } = useColumnStore();
+
     const {teams, fetchTeams} = useTeamStore();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsTaskModalOpen] = useState(false);
 
+    const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
 
     useEffect(() => {
         fetchColumns();
@@ -49,25 +60,42 @@ export default function TaskBoard() {
 
     const handleAddTask = async (task: TaskForm) => {
         await addTask(task);
-        setIsModalOpen(false);
+        setIsTaskModalOpen(false);
         setEditingTask(null);
     };
 
     const handleEditTask = async (task: TaskForm) => {
         await editTask(task);
-        setIsModalOpen(false);
+        setIsTaskModalOpen(false);
         setEditingTask(null);
     };
 
     const handleDeleteTask = async (taskId: number) => {
         await deleteTask(taskId);
-        setIsModalOpen(false);
+        setIsTaskModalOpen(false);
         setEditingTask(null);
+    };
+    const handleAddColumn = async (column: ColumnForm) => {
+        await addColumn(column);
+        setIsColumnModalOpen(false);
+        setEditingColumn(null);
+    };
+
+    const handleEditColumn = async (column: ColumnForm) => {
+        await editColumn(column);
+        setIsColumnModalOpen(false);
+        setEditingColumn(null);
+    };
+
+    const handleDeleteColumn = async (columnId: number) => {
+        await deleteColumn(columnId);
+        setIsColumnModalOpen(false);
+        setEditingColumn(null);
     };
 
     const openEditModal = (task: TaskForm) => {
         setEditingTask(task);
-        setIsModalOpen(true);
+        setIsTaskModalOpen(true);
     };
 
     return (
@@ -75,7 +103,10 @@ export default function TaskBoard() {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Tasks</h2>
                 <div className="flex gap-2">
-                    <Button onClick={() => setIsModalOpen(true)}>
+                    <Button onClick={() => setIsColumnModalOpen(true)}>
+                        <PlusCircle className="mr-2 h-4 w-4"/> Add Column
+                    </Button>
+                    <Button onClick={() => setIsTaskModalOpen(true)}>
                         <PlusCircle className="mr-2 h-4 w-4"/> Add Task
                     </Button>
                 </div>
@@ -90,6 +121,10 @@ export default function TaskBoard() {
                         onDragStart={handleDragStart}
                         onDrop={handleDrop}
                         onEditTask={openEditModal}
+                        onEditColumn={(column) => {
+                            setEditingColumn(column);
+                            setIsColumnModalOpen(true);
+                        }}
                     />
                 ))}
             </div>
@@ -97,7 +132,7 @@ export default function TaskBoard() {
             <TaskModal
                 isOpen={isModalOpen}
                 onClose={() => {
-                    setIsModalOpen(false);
+                    setIsTaskModalOpen(false);
                     setEditingTask(null);
                 }}
                 onSave={editingTask ? handleEditTask : handleAddTask}
@@ -107,6 +142,15 @@ export default function TaskBoard() {
                 users={users}
                 task={editingTask}
             />
+            <ColumnModal
+                isOpen={isColumnModalOpen}
+                onClose={() => {
+                    setIsColumnModalOpen(false)
+                    setEditingColumn(null)
+                } }
+                onSave={editingColumn ? handleEditColumn : handleAddColumn}
+                onDelete={editingColumn ? handleDeleteColumn : undefined} column={editingColumn}            />
+
         </div>
     );
 }
