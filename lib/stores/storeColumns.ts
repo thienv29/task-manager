@@ -1,6 +1,7 @@
 import {create} from "zustand"
 import {columnsAPI} from "@/lib/api-instant"
-import {ColumnForm, ColumnFull} from "@/lib/types"
+import {ColumnForm, ColumnFull, EVENT_COLUMN} from "@/lib/types"
+import {useWebSocketStore} from "@/lib/stores/storeWebsocket";
 
 interface ColumnStore {
     columns: ColumnFull[]
@@ -27,14 +28,17 @@ export const useColumnStore = create<ColumnStore>((set) => ({
     },
     addColumn: async (column) => {
         await columnsAPI.create(column)
+        useWebSocketStore.getState().sendMessage(EVENT_COLUMN.ADD_COLUMN)
         useColumnStore.getState().fetchColumns()
     },
     editColumn: async (column) => {
         await columnsAPI.update(column)
+        useWebSocketStore.getState().sendMessage(EVENT_COLUMN.EDIT_COLUMN)
         useColumnStore.getState().fetchColumns()
     },
     deleteColumn: async (columnId) => {
         await columnsAPI.delete(columnId)
+        useWebSocketStore.getState().sendMessage(EVENT_COLUMN.DELETE_COLUMN)
         useColumnStore.getState().fetchColumns()
     }
 }))
