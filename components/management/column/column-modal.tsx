@@ -29,9 +29,6 @@ export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}:
     const [formData, setFormData] = useState<ColumnForm>(initColumnForm)
 
     const { data: session } = useSession(); // Lấy thông tin phiên đăng nhập
-    //const userRole = session?.user?.role || "MEMBER"; // Lấy vai trò người dùng, mặc định là MEMBER
-    console.log("Session", session);
-    
     useEffect(() => {
         if (column) {
             setFormData({
@@ -88,21 +85,6 @@ export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}:
                       
                         
                     </div>
-                    {/* {userRole === "ADMIN" && ( // Chỉ hiển thị các nút nếu vai trò là ADMIN
-                        <DialogFooter className="flex justify-between">
-                            {column && onDelete && (
-                                <Button type="button" variant="destructive" onClick={handleDelete}>
-                                    Delete
-                                </Button>
-                            )}
-                            <div className="flex gap-2">
-                                <Button type="button" variant="outline" onClick={onClose}>
-                                    Cancel
-                                </Button>
-                                <Button type="submit">{column ? "Save Changes" : "Create Column"}</Button>
-                            </div>
-                        </DialogFooter>
-                    )} */}
                 </form>
             </DialogContent>
         </Dialog>
