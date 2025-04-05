@@ -53,8 +53,7 @@ const providers: Provider[] = [
             const { password: userPassword, ...userWithoutPassword } = userRecord;
 
             return userWithoutPassword;
-        }
-
+        },
     })
 ]
 
@@ -79,7 +78,31 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
 
             }
             return true;
-        }
+        },
+
+        jwt: async ({token, user, account}: { token: any, user: any, account: any }) => {
+            if (user) {
+                const employee = await prisma.user.findFirst({where: {email: user.email}});
+                if (employee) {
+                    token.id = employee.id;
+                    token.email = employee.email;
+                    token.name = employee.name;
+                    token.role = employee.role;
+                    token.teamId = employee.teamId;
+                }
+            }
+            return token;
+        },
+        session: ({session, token}: { session: any, token: any}) => {
+            if (token && session.user) {
+                session.user.id = token.id;
+                session.user.email = token.email;
+                session.user.name = token.name;
+                session.user.role = token.role;
+                session.user.teamId = token.teamId;
+            }
+            return session;
+        },
     },
     pages: {
         signIn: "/login",
