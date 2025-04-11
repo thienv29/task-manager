@@ -82,7 +82,19 @@ export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}:
                             <Label htmlFor="color">Color</Label>
                             <ColorPicker value={formData.color} onChange={(color) => handleSelectChange("color", color)} />
                         </div>
-                      
+                        <DialogFooter className="flex justify-between">
+                        {column && onDelete && (
+                            <Button type="button" variant="destructive" onClick={handleDelete}>
+                                Delete
+                            </Button>
+                        )}
+                        <div className="flex gap-2">
+                            <Button type="button" variant="outline" onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button type="submit">{column ? "Save Changes" : "Create Column"}</Button>
+                        </div>
+                    </DialogFooter>
                         
                     </div>
                 </form>
