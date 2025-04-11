@@ -8,6 +8,7 @@ import {Label} from "@/components/ui/label"
 import {ColumnForm} from "@/lib/types";
 import { ColorPicker } from "@/components/ui/color-picker"
 import { Button } from "@/components/ui/button"
+import { useSession } from "next-auth/react";
 
 interface ColumnModalProps {
     isOpen: boolean
@@ -27,6 +28,7 @@ const initColumnForm: ColumnForm = {
 export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}: ColumnModalProps) {
     const [formData, setFormData] = useState<ColumnForm>(initColumnForm)
 
+    const { data: session } = useSession(); // Lấy thông tin phiên đăng nhập
     useEffect(() => {
         if (column) {
             setFormData({
@@ -83,19 +85,6 @@ export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}:
                       
                         
                     </div>
-                    <DialogFooter className="flex justify-between">
-                        {column && onDelete && (
-                            <Button type="button" variant="destructive" onClick={handleDelete}>
-                                Delete
-                            </Button>
-                        )}
-                        <div className="flex gap-2">
-                            <Button type="button" variant="outline" onClick={onClose}>
-                                Cancel
-                            </Button>
-                            <Button type="submit">{column ? "Save Changes" : "Create Column"}</Button>
-                        </div>
-                    </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>

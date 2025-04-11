@@ -11,7 +11,8 @@ import {useRouter} from "next/navigation";
 
 export default function LoginForm() {
 
-    const [formData, setFormData] = useState<LoginModel>({email: 'admin@gmail.com', password: '123123123'})
+    const [formData, setFormData] = useState<LoginModel>({email: 'admin@gmail.com', 
+        password: '123123123'})
 
     const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

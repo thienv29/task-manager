@@ -12,6 +12,9 @@ import {useUserStore} from "@/lib/stores/storeUsers";
 import {useTaskStore} from "@/lib/stores/storeTasks";
 import {useTeamStore} from "@/lib/stores/storeTeams";
 import ColumnModal from "@/components/management/column/column-modal"
+import useRoleStore, { UserRole } from "@/lib/stores/storeRole"
+import { useSession } from "next-auth/react"
+
 
 export default function TaskBoard() {
     const {columns, fetchColumns} = useColumnStore();
@@ -35,6 +38,15 @@ export default function TaskBoard() {
     } = useColumnStore();
 
     const {teams, fetchTeams} = useTeamStore();
+    const role = useRoleStore((state) => state.role);
+    const { data: session } = useSession(); // Lấy thông tin phiên đăng nhập
+    useEffect(() => {
+        if (session?.user?.role) {
+            useRoleStore.setState({ role: session.user.role as UserRole });
+        }
+    }, [session]);
+
+
 
     const [isModalOpen, setIsTaskModalOpen] = useState(false);
 
@@ -103,12 +115,16 @@ export default function TaskBoard() {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Tasks</h2>
                 <div className="flex gap-2">
-                    <Button onClick={() => setIsColumnModalOpen(true)}>
-                        <PlusCircle className="mr-2 h-4 w-4"/> Add Column
-                    </Button>
-                    <Button onClick={() => setIsTaskModalOpen(true)}>
-                        <PlusCircle className="mr-2 h-4 w-4"/> Add Task
-                    </Button>
+                    { role === "TEAM_LEAD" || role === "ADMIN" && (
+                        <Button onClick={() => setIsTaskModalOpen(true)}>
+                            <PlusCircle className="mr-2 h-4 w-4"/> Add Task
+                        </Button>
+                    )}
+                    { role === "ADMIN" && (
+                        <Button onClick={() => setIsColumnModalOpen(true)}>
+                            <PlusCircle className="mr-2 h-4 w-4"/> Add Column
+                        </Button>
+                    )}
                 </div>
             </div>
 

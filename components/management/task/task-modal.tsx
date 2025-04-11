@@ -11,6 +11,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Column, Team, User} from "@prisma/client";
 import {TaskForm} from "@/lib/types";
 import {Checkbox} from "@/components/ui/checkbox";
+import { useUserStore } from "@/lib/stores/storeUsers"
+import useRoleStore, { UserRole } from "@/lib/stores/storeRole"
+import { useSession } from "next-auth/react"
 
 interface TaskModalProps {
     isOpen: boolean
@@ -61,6 +64,14 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
             setFilteredUsers(users)
         }
     }, [task, users])
+
+    const role = useRoleStore((state) => state.role);
+    const { data: session } = useSession(); // Lấy thông tin phiên đăng nhập
+    useEffect(() => {
+        if (session?.user?.role) {
+            useRoleStore.setState({ role: session.user.role as UserRole });
+        }
+    }, [session]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target
@@ -209,7 +220,7 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                         </div>
                     </div>
                     <DialogFooter className="flex justify-between">
-                        {task && onDelete && (
+                        { (role === "TEAM_LEAD" || role === "ADMIN") && task && onDelete && (
                             <Button type="button" variant="destructive" onClick={handleDelete}>
                                 Delete
                             </Button>
@@ -218,7 +229,8 @@ export default function TaskModal({isOpen, onClose, onSave, onDelete, columns, t
                             <Button type="button" variant="outline" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button type="submit">{task ? "Save Changes" : "Create Task"}</Button>
+
+                            { (role === "TEAM_LEAD" || role === "ADMIN") && (<Button type="submit">{task ? "Save Changes" : "Create Task"}</Button>)}
                         </div>
                     </DialogFooter>
                 </form>
