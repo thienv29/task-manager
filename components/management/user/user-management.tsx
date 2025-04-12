@@ -1,8 +1,8 @@
 "use client"
 
-// Import các hook và component cần thiết
 import {useEffect, useState} from "react"
 import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
 import {PlusCircle} from "lucide-react"
 import UserList from "@/components/management/user/user-list"
 import UserModal from "@/components/management/user/user-modal"
@@ -11,7 +11,8 @@ import {useTeamStore} from "@/lib/stores/storeTeams"
 import {UserForm} from "@/lib/types";
 
 export default function UserManagement() {
-    const [isModalOpen, setModalOpen] = useState<boolean>(false)
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState("");
 
     const {
         users,
@@ -35,9 +36,13 @@ export default function UserManagement() {
     }
     const handleAdd = async (e: UserForm) => {
         await addUser(e);
-        setEditingUser(null)
+        setEditingUser(null);
         setModalOpen(false);
     }
+
+    const filteredUsers = users.filter((user) =>
+        `${user.name} ${user.email}`.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
 
     return (
         <div className="space-y-4">
@@ -47,11 +52,19 @@ export default function UserManagement() {
                     <PlusCircle className="mr-2 h-4 w-4"/> Add User
                 </Button>
             </div>
-
-            <UserList users={users} teams={teams} onEditUser={(e) => {
-                setEditingUser(e)
-                setModalOpen(true);
-            }}/>
+            <Input
+                placeholder="Search users by name or email..."
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+            />
+            <UserList
+                users={filteredUsers}
+                teams={teams}
+                onEditUser={(e) => {
+                    setEditingUser(e);
+                    setModalOpen(true);
+                }}
+            />
 
             <UserModal
                 isOpen={isModalOpen}
@@ -67,4 +80,3 @@ export default function UserManagement() {
         </div>
     );
 }
-

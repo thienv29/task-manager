@@ -4,12 +4,16 @@ services:
     container_name: task-manager-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456} # Default from .env
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-task_manager}     # Default from .env
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-task_manager}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - internal_network
+    deploy:
+      resources:
+        limits:
+          memory: 700M
 
   app:
     build:
@@ -20,17 +24,22 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-123456}@db:3306/${MYSQL_DATABASE:-task_manager} # Uses db service name and defaults from .env
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://task-manager.softwarehub.vn} # HTTPS URL (Handled by Nginx Proxy Manager)
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-6uPabFGBDJtIOUsIdvQZOFlbGiXMuuHskRRqQ6eqajc=} # Default from AUTH_SECRET in .env
-      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-609224603478-r7k88vtfo0bptc1drf6fe5j3f7qsu89e.apps.googleusercontent.com} # Default from .env
-      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-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} # Default from .env
-      PASSWORD_DEFAULT: ${PASSWORD_DEFAULT:-123123123} # Default from .env
-      NEXT_PUBLIC_WEBSOCKET_URL: wss://task-manager.softwarehub.vn/ws # WSS URL, path /ws (Handled by Nginx Proxy Manager)
-    # Ports are not exposed directly; Nginx Proxy Manager connects to the container network
+      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-123456}@db:3306/${MYSQL_DATABASE:-task_manager}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://task-manager.softwarehub.vn}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-6uPabFGBDJtIOUsIdvQZOFlbGiXMuuHskRRqQ6eqajc=}
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-609224603478-r7k88vtfo0bptc1drf6fe5j3f7qsu89e.apps.googleusercontent.com}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-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}
+      PASSWORD_DEFAULT: ${PASSWORD_DEFAULT:-123123123}
+      NEXT_PUBLIC_WEBSOCKET_URL: wss://ws.softwarehub.vn
+      AUTH_TRUST_HOST: ${AUTH_TRUST_HOST:-true}
+    ports:
+      - "5232:3000" # Expose app on port 5232
     networks:
       - internal_network
-    # Removed Traefik labels
+    deploy:
+      resources:
+        limits:
+          memory: 500M
 
   websocket:
     build:
@@ -38,18 +47,21 @@ services:
       dockerfile: Dockerfile
     container_name: task-manager-websocket
     restart: unless-stopped
-    # Override the default command from Dockerfile to start the WebSocket server
     command: ["npx", "ts-node", "websocket-server.ts"]
     environment:
-      # Add any environment variables needed specifically for the WebSocket server
       NODE_ENV: production
-    # Ports are not exposed directly; Nginx Proxy Manager connects to the container network
+    ports:
+      - "5233:8080" # Expose WebSocket server
     networks:
       - internal_network
+    deploy:
+      resources:
+        limits:
+          memory: 300M
 
 volumes:
   db_data:
 
 networks:
-  internal_network: # Network for communication between app/ws and db
+  internal_network:
     driver: bridge

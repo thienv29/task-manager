@@ -15,7 +15,7 @@ export const useWebSocketStore = create<WebSocketState>((set, get) => ({
     connect: () => {
         if (get().socket) return; // Tránh tạo nhiều kết nối
 
-        const socket = new WebSocket("ws://localhost:8080");
+        const socket = new WebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL as string);
 
         socket.onopen = () => {
             console.log("✅ WebSocket connected");
