@@ -25,11 +25,9 @@ RUN npx prisma generate
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
-# Pass build-time environment variables if needed, e.g., NEXT_PUBLIC_ variables
-# ARG NEXT_PUBLIC_API_URL
-# ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-RUN yarn build
+ARG NEXT_PUBLIC_WEBSOCKET_URL
+ENV NEXT_PUBLIC_WEBSOCKET_URL=${NEXT_PUBLIC_WEBSOCKET_URL}
+RUN NEXT_PUBLIC_WEBSOCKET_URL=${NEXT_PUBLIC_WEBSOCKET_URL} yarn build
 
 # Stage 2: Production image
 FROM node:20-alpine

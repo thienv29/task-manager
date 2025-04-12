@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_WEBSOCKET_URL: wss://ws.softwarehub.vn
     container_name: task-manager-app
     restart: unless-stopped
     depends_on:
