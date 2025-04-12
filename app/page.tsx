@@ -38,7 +38,7 @@ function HeroSection() {
                         </div>
                         <div className="flex flex-col gap-2 min-[400px]:flex-row">
                             <Button asChild size="lg">
-                                <Link href="#contact">Get Started</Link>
+                                <Link href="/login">Get Started</Link>
                             </Button>
                             <Button asChild variant="outline" size="lg">
                                 <Link href="#features">
@@ -50,7 +50,7 @@ function HeroSection() {
                     </div>
                     <div className="flex items-center justify-center">
                         <Image
-                            src="/images/placeholder.svg?height=550&width=550"
+                            src="/images/herro.jpeg?height=550&width=550"
                             alt="Hero Image"
                             width={550}
                             height={550}
@@ -231,7 +231,7 @@ function Footer() {
         <footer className="w-full border-t flex flex-col items-center justify-center bg-background py-6 md:py-12">
             <div className="container flex flex-col items-center justify-between gap-4 md:flex-row md:gap-8">
                 <div className="flex items-center gap-2">
-                    <Image src="/images/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32}/>
+                    <Image src="/images/logo.jpeg?height=32&width=32" alt="Logo" width={32} height={32}/>
                     <span className="text-lg font-bold">Company</span>
                 </div>
                 <nav className="flex gap-4 sm:gap-6">
