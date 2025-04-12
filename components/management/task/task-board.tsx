@@ -115,7 +115,7 @@ export default function TaskBoard() {
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">Tasks</h2>
                 <div className="flex gap-2">
-                    { role === "TEAM_LEAD" || role === "ADMIN" && (
+                    { (role === "TEAM_LEAD" || role === "ADMIN") && (
                         <Button onClick={() => setIsTaskModalOpen(true)}>
                             <PlusCircle className="mr-2 h-4 w-4"/> Add Task
                         </Button>
