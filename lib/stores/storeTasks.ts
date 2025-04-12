@@ -19,7 +19,6 @@ export const useTaskStore = create<TaskStore>((set) => ({
     editingTask: null,
 
     fetchTasks: async () => {
-        console.log('fetch task')
         const tasks = await tasksAPI.getAll()
         set({tasks})
     },

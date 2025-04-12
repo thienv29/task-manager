@@ -22,7 +22,6 @@ export const useWebSocketStore = create<WebSocketState>((set, get) => ({
         };
 
         socket.onmessage = (event) => {
-            console.log("📩 Received:", event.data);
             const cleanData = event.data.split(': ').pop();  // Lấy phần sau dấu ": "
 
             switch (cleanData) {
@@ -55,7 +54,6 @@ export const useWebSocketStore = create<WebSocketState>((set, get) => ({
         const socket = get().socket;
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(message);
-            console.log("📤 Sent:", message);
         } else {
             console.warn("⚠️ WebSocket not connected!");
         }

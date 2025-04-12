@@ -24,13 +24,11 @@ export default function UserList({ users, teams, onEditUser }: UserListProps) {
         }
     }, [session]);
     
-    console.log("Team ID:", teamId);
 
     const filteredUsers = role === "TEAM_LEAD"
     ? users.filter((user) => user.teamId === Number(teamId)) // Lọc người dùng cùng team với TEAM_LEAD
     : users; // Nếu không phải TEAM_LEAD, hiển thị tất cả người dùng
     
-    console.log("Filtered users:", filteredUsers); // In ra danh sách người dùng đã lọc
     
     const getInitials = (name: string) => {
         return name

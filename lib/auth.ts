@@ -61,7 +61,6 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     providers,
     callbacks:{
         signIn: async (params) => {
-            console.log(params)
             const passwordDefault = await hashPassword(process.env.PASSWORD_DEFAULT)
             if (params.account.provider == 'google'){
                 const userFoundByEmail = await prisma.user.findFirst({where: {email: params.user.email}});

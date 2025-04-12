@@ -64,7 +64,6 @@ export default function ColumnModal({isOpen, onClose, onSave, onDelete, column}:
             onDelete(column.id)
         }
     }
-    console.log("Column Modal", column)
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[500px]">

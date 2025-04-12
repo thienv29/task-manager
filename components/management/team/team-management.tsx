@@ -53,7 +53,6 @@ export default function TeamManagement() {
             <TeamModal
                 isOpen={isModalOpen}
                 onClose={() => {
-                    console.log("TeamModal onClose called");
                     setModalOpen(false);
                     setEditingTeam(null)
                 }}
